@@ -1,0 +1,349 @@
+{% extends 'layout.html' %} 
+{% block title %} 
+eVoting 
+{% endblock %} 
+{% load static %}
+<!-- custom css --> 
+{% block css %}
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    p {
+        color: #fff!important;
+    }
+    .w3-bottombar {
+      color: #fff!important;
+    }
+</style> 
+{% endblock %}
+<!-- custom css end--> 
+{% block content %} 
+<section class="page-title">
+    <!-- Container Start -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 text-center">
+                <!-- Title text -->
+            </div>
+        </div>
+    </div> <!-- Container End -->
+</section>
+<section class="dashboard section">
+    <!-- Container Start -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h2>Dashboard</h2>
+                </div>
+            </div>
+        </div> <!-- Row Start -->
+        
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="sidebar">
+                    <!-- User Widget -->
+                    <div class="widget user-dashboard-profile" >
+                        <!-- User Image -->
+                        <div class="profile-thumb"> <img src="{{ userdata.profile_photo.url }}" alt="" class="rounded-circle"> </div> <!-- User Name -->
+                        <h5 class="text-center" style="color: black !important">{{ userdata.first_name }} {{ userdata.last_name }}</h5>
+                        <p style="color: black !important">Joined {{ userdata.date_added }}</p>
+                        <p style="color: black !important">{{ user_type_t }}</p> <a href="{% url 'election_officers:edit_profile' %}" class="btn btn-main-sm">Edit Profile</a>
+                    </div> <!-- Dashboard Links -->
+                    <div class="widget user-dashboard-menu">
+                        <ul>
+                            <li><a href="{% url 'election_officers:logout' %}"><i class="fa fa-cog"></i> Logout</a></li>
+                            <li><a href="#!" data-toggle="modal" data-target="#deleteaccount"><i class="fa fa-power-off"></i>Delete Account</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-10">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Recently Favorited -->
+                        <div class="w3-row-padding w3-margin-bottom">
+                            <div class="w3-quarter">
+                                <div class="w3-container w3-red w3-padding-16">
+                                    <div class="w3-left"><i class="fa fa-laptop w3-xxxlarge"></i></div>
+                                    <div class="w3-right">
+                                        <h3 style="color: white">{{ elections_data|length }}</h3>
+                                    </div>
+                                    <div class="w3-clear"></div>
+                                    <h4 style="color: white">Elections</h4>
+                                </div>
+                            </div>
+                            <div class="w3-quarter">
+                                <div class="w3-container w3-blue w3-padding-16">
+                                    <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
+                                    <div class="w3-right">
+                                        <h3 style="color: white">{{ voters|length }}</h3>
+                                    </div>
+                                    <div class="w3-clear"></div>
+                                    <h4 style="color: white">Voters</h4>
+                                </div>
+                            </div>
+                            <div class="w3-quarter">
+                                <div class="w3-container w3-teal w3-padding-16">
+                                    <div class="w3-left"><i class="fa fa-share-alt w3-xxxlarge"></i></div>
+                                    <div class="w3-right">
+                                        <h3 style="color: white">{{ candidates|length }}</h3>
+                                    </div>
+                                    <div class="w3-clear"></div>
+                                    <h4 style="color: white">Candidates</h4>
+                                </div>
+                            </div>
+                            <div class="w3-quarter">
+                                <div class="w3-container w3-orange w3-text-white w3-padding-16">
+                                    <div class="w3-left"><i class="fa fa-comment w3-xxxlarge"></i></div>
+                                    <div class="w3-right">
+                                        <h3 style="color: white">{{ messages|length }}</h3>
+                                    </div>
+                                    <div class="w3-clear"></div>
+                                    <h4 style="color: white">Messages</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="w3-panel col-md-12">
+                            <div class="w3-row-padding" style="margin:0 -16px">
+                                <div class="w3-third">
+                                    <h5>Regions</h5> <img src="https://www.w3schools.com/w3images/region.jpg" style="width:100%" alt="Google Regional Map">
+                                </div>
+                                <div class="w3-twothird">
+                                    <h5>Feeds</h5>
+                                    <table class="w3-table w3-striped w3-white">
+                                        <tr>
+                                            <td><i class="fa fa-user w3-text-blue w3-large"></i></td>
+                                            <td>New record, over 90 views.</td>
+                                            <td><i>10 mins</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-bell w3-text-red w3-large"></i></td>
+                                            <td>Database error.</td>
+                                            <td><i>15 mins</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-users w3-text-yellow w3-large"></i></td>
+                                            <td>New record, over 40 users.</td>
+                                            <td><i>17 mins</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-comment w3-text-red w3-large"></i></td>
+                                            <td>New comments.</td>
+                                            <td><i>25 mins</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-bookmark w3-text-blue w3-large"></i></td>
+                                            <td>Check transactions.</td>
+                                            <td><i>28 mins</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-laptop w3-text-red w3-large"></i></td>
+                                            <td>CPU overload.</td>
+                                            <td><i>35 mins</i></td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-share-alt w3-text-green w3-large"></i></td>
+                                            <td>New shares.</td>
+                                            <td><i>39 mins</i></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="w3-container">
+                            <h5>General Stats</h5>
+                            <p style="color: black !important;">New Visitors</p>
+                            <div class="w3-grey" style="margin-bottom: 7px;">
+                                <div class="w3-container w3-center w3-padding w3-green" style="width:{{ p_graphs_total_user|add:random_number }}%">+{{ p_graphs_total_user|add:random_number }}%</div>
+                            </div> 
+                            <p style="color: black !important;">New Users</p>
+                            <div class="w3-grey" style="margin-bottom: 7px;" >
+                                <div class="w3-container w3-center w3-padding w3-orange" style="width:{{ p_graphs_total_user }}%">{{ p_graphs_total_user }}%</div>
+                            </div>
+                            <p style="color: black !important;">Bounce Rate</p>
+                            <div class="w3-grey" style="margin-bottom: 7px;" >
+                                <div class="w3-container w3-center w3-padding w3-red" style="width:{{ p_graphs_total_user|add:random_number_2 }}%">{{ p_graphs_total_user|add:random_number_2 }}%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <h5>Recent Elections</h5>
+  
+                      {% if elections_data %}
+                      <table class="table table-condensed table-bordered table-striped">
+  
+                        <thead>
+                          <tr>
+                            <th>Image</th>
+                            <th>Title</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for election in elections_data %}
+                            <tr>
+                              <td><img src="{{ election.logo_image.url }}" height="50" alt="image description" class="avatar-2"></td>
+                              <td>{{ election.title }}</td>
+                              <td>{{ election.election_start_date_time|date:"F j, Y, g:i a" }}</td>
+                              <td>{{ election.election_end_date_time|date:"F j, Y, g:i a" }}</td>
+                              <td>{{ election.status }}</td>
+                            </tr>
+                          {% endfor %}
+  
+                      </table>
+                    {% else %}
+                      <p style="color: black !important;">No users found.</p>
+                    {% endif %}
+                    </div>                   
+                </div>
+                <hr>
+                <div class="row">
+
+                  <div class="col-lg-6">
+                    <h5>Recent Candidates</h5>
+  
+                    {% if candidates %}
+                    <table class="table table-condensed table-bordered table-striped">
+                      <thead>
+                        <tr>
+                          <th>Photo</th>
+                          <th>Full Name</th>
+                          <th>Email Address</th>
+                          <th>Mobile Number</th>
+                          <th>District</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for user in candidates|slice:":10" %}
+                          <tr>
+                            <td><img src="{{ user.profile_photo.url }}" height="40" alt="image description" class="avatar" ></td>
+                            <td>{{ user.first_name }} {{ user.last_name }}</td>
+                            <td>{{ user.email_address }}</td>
+                            <td>{{ user.mobile_number }}</td>
+                            <td>{{ user.district }}</td>
+                            <td>{{ user.status }}</td>
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  {% else %}
+                    <p style="color: black !important;">No users found.</p>
+                  {% endif %}
+                  
+                  </div>
+                   
+                  <div class="col-lg-6">
+                                          <div class="w3-container">
+                                              <h5>Countries</h5>
+                                              <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+                                                  <tr>
+                                                      <td>United States</td>
+                                                      <td>{{ random_number_3|add:65 }}%</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>UK</td>
+                                                      <td>{{ random_number_3|add:15.7 }}%</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>Russia</td>
+                                                      <td>{{ random_number_3|add:5.6 }}%</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>Spain</td>
+                                                      <td>{{ random_number_3|add:2.1 }}%</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>India</td>
+                                                      <td>{{ random_number_3|add:1.9 }}%</td>
+                                                  </tr>
+                                                  <tr>
+                                                      <td>France</td>
+                                                      <td>{{ random_number_3|add:1.5 }}%</td>
+                                                  </tr>
+                                              </table><br>
+                                          </div>
+                                      </div>
+                  </div>
+                  <hr/>
+                  <div class="row">                                    
+                      <div class="col-lg-6">
+                        <h5>Recent Officers</h5>
+    
+                      {% if election_officers %}
+                      <table class="table table-condensed table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>Photo</th>
+                            <th>Full Name</th>
+                            <th>Email Address</th>
+                            <th>Mobile Number</th>
+                            <th>District</th>
+                            <th>Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for user in election_officers|slice:":10" %}
+                            <tr>
+                              <td><img src="{{ user.profile_photo.url }}" height="40" alt="image description" class="avatar" ></td>
+                              <td>{{ user.first_name }} {{ user.last_name }}</td>
+                              <td>{{ user.email_address }}</td>
+                              <td>{{ user.mobile_number }}</td>
+                              <td>{{ user.district }}</td>
+                              <td>{{ user.status }}</td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    {% else %}
+                      <p style="color: black !important;">No users found.</p>
+                    {% endif %}
+    
+                      </div>                  
+                      </div>
+                      <hr />
+                <div class="w3-container w3-dark-grey w3-padding-32">
+                    <div class="w3-row">
+                        <div class="w3-container w3-third">
+                            <h5 class="w3-bottombar w3-border-green">Demographic</h5>
+                            <p>Language</p>
+                            <p>Country</p>
+                            <p>City</p>
+                        </div>
+                        <div class="w3-container w3-third">
+                            <h5 class="w3-bottombar w3-border-red">System</h5>
+                            <p>Browser</p>
+                            <p>OS</p>
+                            <p>More</p>
+                        </div>
+                        <div class="w3-container w3-third">
+                            <h5 class="w3-bottombar w3-border-orange">Target</h5>
+                            <p>Users</p>
+                            <p>Active</p>
+                            <p>Geo</p>
+                            <p>Interests</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- Row End -->
+        </div> <!-- Container End -->
+</section>
+ {% endblock %}
+<!-- custom js --> 
+{% block js %}
+ {% endblock %}
+<!-- custom js end-->

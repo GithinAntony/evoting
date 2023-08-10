@@ -1,0 +1,165 @@
+{% load static %}
+<header id="header" class="header align-items-center sticked" >
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <nav class="navbar navbar-expand-lg navbar-light navigation">
+          <a class="navbar-brand" href="">
+            <img src="{% static 'images/logo.png' %}" alt="" width="180" >
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if 'is_logged_in' not in request.session %}
+            <ul class="navbar-nav ml-auto main-nav ">
+              {% url 'home:home' as t_url %}
+              <li class="nav-item {% if request.path == t_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'home:home' %}">Home</a>
+              </li>
+              {% url 'home:about_us' as about_us_url %}
+              {% url 'home:contact_us' as contact_us_url %}              
+              <li class="nav-item dropdown dropdown-slide {% if request.path == about_us_url or request.path == contact_us_url %}active{% endif %}">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#!">Company<span><i class="fa fa-angle-down"></i></span></a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item {% if request.path == about_us_url %}active{% endif %}" href="{% url 'home:about_us' %}">About us</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item {% if request.path == contact_us_url %}active{% endif %}" href="{% url 'home:contact_us' %}">Contact Us</a>
+                  </li>
+                </ul>
+              </li>
+     <!-- Elections -->
+     {% url 'home:list_elections' as list_elections_url %}
+     {% url 'home:list_results' as list_results_url %}
+     <li class="nav-item dropdown dropdown-slide {% if request.path == list_elections_url or request.path == list_results_url %}active{% endif %}">
+       <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#!">Elections<span><i class="fa fa-angle-down"></i></span></a>
+       <ul class="dropdown-menu">
+         <li><a class="dropdown-item {% if request.path == list_elections_url %}active{% endif %}" href="{% url 'home:list_elections' %}">Elections</a></li>
+         <li><a class="dropdown-item {% if request.path == list_results_url %}active{% endif %}" href="{% url 'home:list_results' %}">Results</a></li>
+       </ul>
+     </li>
+     {% url 'election_officers:sign_in' as election_officers_sign_in_url %}
+     {% url 'election_officers:sign_up' as election_officers_sign_up_url %}
+              <li class="nav-item dropdown dropdown-slide {% if request.path == election_officers_sign_in_url or request.path == election_officers_sign_up_url %}active{% endif %}">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#!">Officials<span><i class="fa fa-angle-down"></i></span>
+                </a>
+                <!-- Dropdown list -->
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item {% if request.path == election_officers_sign_in_url %}active{% endif %}" href="{% url 'election_officers:sign_in' %}">Login</a></li>
+                  <li><a class="dropdown-item {% if request.path == election_officers_sign_up_url %}active{% endif %}" href="{% url 'election_officers:sign_up' %}">Registration</a></li>
+                </ul>
+              </li>
+              {% url 'candidates:sign_in' as candidates_sign_in_url %}
+              {% url 'candidates:sign_up' as candidates_sign_up_url %}
+              <li class="nav-item dropdown dropdown-slide {% if request.path == candidates_sign_in_url or request.path == candidates_sign_up_url %}active{% endif %}">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#!">Candidates<span><i class="fa fa-angle-down"></i></span></a>
+                <!-- Dropdown list -->
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item {% if request.path == candidates_sign_in_url %}active{% endif %}" href="{% url 'candidates:sign_in' %}">Login</a></li>
+                  <li><a class="dropdown-item {% if request.path == candidates_sign_up_url %}active{% endif %}" href="{% url 'candidates:sign_up' %}">Registration</a></li>
+                </ul>
+              </li>
+              </ul>            
+              {% url 'voters:sign_up' as voters_sign_up_url %}
+              {% url 'voters:sign_in' as voters_sign_in_url %}
+              <ul class="navbar-nav ml-auto mt-10">
+                  <li class="nav-item">
+                      <a class="nav-link login-button" href="{% url 'voters:sign_up' %}">Registration</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link text-white add-button" href="{% url 'voters:sign_in' %}">
+                          <i class="fa fa-plus-circle"></i> Login
+                      </a>
+                  </li>              
+              </ul>
+            {% endif %}
+            {% if 'is_logged_in' in request.session and request.session.user_type == 'voters' %}
+            {% url 'voters:dashboard' as voters_dashboard_url %}
+            {% url 'voters:edit_profile' as voters_edit_profile_url %}
+            {% url 'elections:messages_list' as elections_messages_list_url %}
+            {% url 'voters:list_elections' as voters_list_elections_url %}
+            <ul class="navbar-nav ml-auto main-nav ">
+              <li class="nav-item {% if request.path == voters_dashboard_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'voters:dashboard' %}">Dashboard</a>
+              </li>
+              <li class="nav-item {% if request.path == voters_edit_profile_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'voters:edit_profile' %}">Edit Profile</a>
+              </li>
+              <li class="nav-item {% if request.path == elections_messages_list_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'elections:messages_list' %}">Messages</a>
+              </li>              
+              <li class="nav-item {% if request.path == voters_list_elections_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'voters:list_elections' %}">Election</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'voters:logout' %}"><b>({{ request.session.user_type|capfirst }})</b> logout</a>
+              </li>
+            </ul>
+            {% endif %}
+            {% if 'is_logged_in' in request.session and request.session.user_type == 'candidates' %}
+            {% url 'candidates:dashboard' as candidates_dashboard_url %}
+            {% url 'candidates:edit_profile' as candidates_edit_profile_url %}
+            {% url 'elections:messages_list' as elections_messages_list_url %}
+            {% url 'candidates:list_voters' as candidates_list_voters_url %}
+            {% url 'candidates:list_elections' as candidates_list_elections_url %}
+            <ul class="navbar-nav ml-auto main-nav ">
+              <li class="nav-item {% if request.path == candidates_dashboard_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'candidates:dashboard' %}">Dashboard</a>
+              </li>
+              <li class="nav-item {% if request.path == candidates_edit_profile_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'candidates:edit_profile' %}">Edit Profile</a>
+              </li>
+              <li class="nav-item {% if request.path == elections_messages_list_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'elections:messages_list' %}">Messages</a>
+              </li>              
+              <li class="nav-item {% if request.path == candidates_list_voters_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'candidates:list_voters' %}">Voters</a>
+              </li>
+              <li class="nav-item {% if request.path == candidates_list_elections_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'candidates:list_elections' %}">Election</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'candidates:logout' %}"><b>({{ request.session.user_type|capfirst }})</b> logout</a>
+              </li>
+            </ul>
+            {% endif %}
+            {% if 'is_logged_in' in request.session and request.session.user_type == 'election_officers' %}
+            {% url 'election_officers:dashboard' as eo_dashboard_url %}
+            {% url 'elections:messages_list' as eo_messages_list_url %}
+            {% url 'election_officers:list_candidates' as eo_list_candidates_url %}
+            {% url 'election_officers:list_voters' as eo_list_voters_url %}
+            {% url 'elections:list_elections' as eo_list_elections_url %}
+            {% url 'election_officers:edit_profile' as eo_edit_profile_url %}
+            <ul class="navbar-nav ml-auto main-nav ">
+              <li class="nav-item {% if request.path == eo_dashboard_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'election_officers:dashboard' %}">Dashboard</a>
+              </li>
+              <li class="nav-item {% if request.path == eo_messages_list_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'elections:messages_list' %}">Messages</a>
+              </li>
+              <li class="nav-item {% if request.path == eo_list_candidates_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'election_officers:list_candidates' %}">Candidates</a>
+              </li>              
+              <li class="nav-item {% if request.path == eo_list_voters_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'election_officers:list_voters' %}">Voters</a>
+              </li>
+              <li class="nav-item {% if request.path == eo_list_elections_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'elections:list_elections' %}">Election</a>
+              </li>
+              <li class="nav-item {% if request.path == eo_edit_profile_url %}active{% endif %}">
+                <a class="nav-link" href="{% url 'election_officers:edit_profile' %}">Edit Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'election_officers:logout' %}">logout</a>
+              </li>
+            </ul>
+            {% endif %}
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+</header>

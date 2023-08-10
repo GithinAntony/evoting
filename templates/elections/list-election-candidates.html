@@ -1,0 +1,138 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<link href="{% static 'plugins/datatables/datatables.min.css' %}" rel="stylesheet"/>
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+<section class="dashboard section">
+	<div class="row">
+		<div class="col-md-12">
+		  <div class="section-title">
+			<h2>Election Candidates</h2>
+		  </div>
+		</div>
+	  </div>
+	<div class="row">
+		<div class="col-md-12 text-center">
+			{% if messages %}
+			<ul class="messages text-center">
+			{% for message in messages %}
+			 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			 {% endfor %}
+			 </ul>
+			 {% endif %}
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+			  <a href="{% url 'elections:list_elections' %}" class="btn btn-danger btn-sm pull-right" style="padding: .25rem .5rem;"><i class="fa fa-arrow-left"></i> Back</a>
+			</div>
+		  </div>
+		  <br />
+		<!-- Post Your ad start -->
+		<fieldset class="">
+		  <div class="row">
+			<div class="col-lg-12">
+				<h6 class="font-weight-bold pb-1">Added Candidates:</h6>
+				{% if userdata_candidates_election %}
+				<table class="table table-bordered bordered table-striped table-condensed datatable custom-table" id="example1" >
+					<thead>
+					  <tr>
+						<th>#</th>
+						<th>Photo</th>
+						<th>Name</th>
+						<th>Status</th>
+						<th>Party</th>
+						<th>Position</th>
+						<th class="text-center">Action</th>
+					  </tr>
+					</thead>
+					<tbody>
+						{% for row in userdata_candidates_election %}
+					  <tr>
+						<td>{{ forloop.counter }}</td>
+						<td class="product-thumb">
+						  <img src="{{ row.candidates.profile_photo.url }}" height="100" alt="image description" class="avatar" >
+						</td>
+						<td class="product-details">
+						  <h3 class="title">{{ row.candidates.first_name }} {{ row.candidates.last_name }}</h3>
+						  <span class="add-id"><strong>Aadhaar ID:</strong> {{ row.candidates.aadhaar_number }}</span>  <br />
+						  <span class="location"><strong>Email:</strong> {{ row.candidates.email_address }}</span>
+						  <span class="location"><strong>Mobile:</strong> {{ row.candidates.mobile_number }}</span>                      
+						</td>
+						<td>	
+							{% if row.status == 'accepted' %}
+							<b style="color: green;">Accepted</b>
+							{% elif row.status == 'rejected' %}
+							<b style="color: red;">Rejected</b>
+							{% else %}
+							<b style="color: blue;">Applied</b>
+							{% endif %}  						
+						</td>
+						<td>
+							<span class="location"><img src="{{ row.party.party_image.url }}" height="100" alt="image description" class="avatar" ></span>
+							<span class="location"> {{ row.party.party_name }}</span>    
+						</td>
+						<td>{{ row.position.postion_name }}</td>
+						<td class="action" data-title="Action">
+						  <div class="">
+							<ul class="list-inline justify-content-center">
+
+							  <li class="list-inline-item">
+                                <a data-toggle="tooltip" data-placement="top" title="view" class="view" href="{% url 'elections:view_election_candidates' id=userdata.unique_id id_2=row.unique_id %}">
+                                  <i class="fa fa-eye"></i>
+                                </a>
+                              </li>
+
+							  <li class="list-inline-item">					
+								<a data-toggle="tooltip" data-placement="top" title="view" class="view" href="{% url 'elections:delete_election_candidates' id=userdata.unique_id id_2=row.unique_id %}">
+								  <i class="fa fa-trash"></i>
+								</a>
+							  </li>
+
+							</ul>
+						  </div>
+						</td>
+					  </tr>
+					  {% endfor %}
+					</tbody>
+				  </table>
+				  {% else %}
+				  <p><b>No Candidates found.</b></p>
+				  {% endif %}				
+			</div>
+			</div>
+		  </div>
+		</fieldset>
+		<!-- Post Your ad end -->
+	</div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+    $('#example').DataTable();
+	$('#example1').DataTable();
+});  
+</script>
+{% endblock %}
+<!-- custom js end-->

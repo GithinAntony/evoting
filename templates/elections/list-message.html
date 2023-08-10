@@ -1,0 +1,127 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<link href="{% static 'plugins/datatables/datatables.min.css' %}" rel="stylesheet"/>
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+
+<section class="dashboard section">
+	<div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+        <div class="section-title">
+          <h2>Messages</h2>
+        </div>
+      </div>
+    </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {% if messages %}
+                <ul class="messages text-center">
+                {% for message in messages %}
+                 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                 {% endfor %}
+                 </ul>
+                 {% endif %}
+            </div>
+            </div>
+		<div class="row">
+			<div class="col-lg-12">
+        {% if user_messages_list_array %}
+                <table class="table table-bordered bordered table-striped table-condensed datatable custom-table" id="example" >
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Email/Mobile</th>
+                        <th scope="col">User Type</th>
+                        <th scope="col">Msg Type</th>
+                        <th scope="col">#</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for row in user_messages_list_array %}
+                      {% if row.msg_type == 'sender' %}
+                          <tr>
+                              <td scope="row">{{ forloop.counter }}</td> 
+                              <td class="product-thumb">
+                                <img src="{{ row.messages_index.recipient_user.profile_photo.url }}" height="50" alt="image description" class="avatar" >
+                              </td>
+                              <td class="product-details">
+                                <h3 class="title">{{ row.messages_index.recipient_user.first_name|capfirst }} {{ row.messages_index.recipient_user.last_name|capfirst }}</h3>
+                                <span class="add-id"><strong>Aadhaar ID:</strong> {{ row.messages_index.recipient_user.aadhaar_number }}</span>  <br />                      
+                                <span class="location"><strong>Location:</strong> {{ row.messages_index.recipient_user.district }}, {{ row.messages_index.recipient_user.state }}</span>
+                              </td>  
+                              <td>
+                                <span class="location"><strong>Email:</strong> {{ row.messages_index.recipient_user.email_address }}</span><br />
+                                <span class="location"><strong>Mobile:</strong> {{ row.messages_index.recipient_user.mobile_number }}</span>                        
+                              </td>
+                              <td>{{ row.messages_index.recipient_user.user_type|capfirst }}</td>
+                              <td>Outgoing</td>
+                              <td>
+                              <a data-toggle="tooltip" data-placement="top" title="view" class="view" href="{% url 'elections:messages_view' id=row.messages_index.unique_id init_id=0 page_type='list' %}"><i class="fa fa-eye"></i></a>   
+                              </td>
+                          </tr>
+                          {% elif row.msg_type == 'recipient' %}
+                          <tr>
+                            <td scope="row">{{ forloop.counter }}</td> 
+                            <td class="product-thumb">
+                              <img src="{{ row.messages_index.sender_user.profile_photo.url }}" height="50" alt="image description" class="avatar" class="avatar" >
+                            </td>
+                            <td class="product-details">
+                              <h3 class="title">{{ row.messages_index.sender_user.first_name|capfirst }} {{ row.messages_index.sender_user.last_name|capfirst }}</h3>
+                              <span class="add-id"><strong>Aadhaar ID:</strong> {{ row.messages_index.sender_user.aadhaar_number }}</span>  <br />                      
+                              <span class="location"><strong>Location:</strong> {{ row.messages_index.sender_user.district }}, {{ row.messages_index.sender_user.state }}</span>
+                            </td>  
+                            <td>
+                              <span class="location"><strong>Email:</strong> {{ row.messages_index.sender_user.email_address }}</span><br />
+                              <span class="location"><strong>Mobile:</strong> {{ row.messages_index.sender_user.mobile_number }}</span>                        
+                            </td>
+                            <td>{{ row.messages_index.sender_user.user_type|capfirst }}</td>
+                            <td>Incoming</td>
+                            <td>
+                            <a data-toggle="tooltip" data-placement="top" title="view" class="view" href="{% url 'elections:messages_view' id=row.messages_index.unique_id init_id=0 page_type='list' %}"><i class="fa fa-eye"></i></a>                             
+                            </td>
+                        </tr>
+                          {% endif %}
+                      {% endfor %}
+                  </tbody>
+                  </table>
+                  {% else %}
+                  <p><b>No chats found.</b></p>
+                  {% endif %}
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+    $('#example').DataTable();
+});  
+</script>
+{% endblock %}
+<!-- custom js end-->

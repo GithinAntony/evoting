@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+
+<section class="login py-5 border-top-1">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="section-title">
+                <h2>Elections</h2>
+                <p>Here you have to enter aadhar number</p>
+              </div>
+            </div>
+          </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-8 align-item-center">
+          <div class="border">
+            <form action="" method="post" id="myform" name="myform" >
+              {% csrf_token %}
+              {% if messages %}
+              <ul class="messages text-center">
+              {% for message in messages %}
+               <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+               {% endfor %}
+               </ul>
+               {% endif %}
+              <fieldset class="p-4">
+                <div class="row">
+                  <div class="col-lg-12" style="color: darkblue;">* An otp will be sent to your mobile number associated with your aadhaar card. </div>
+                  <div class="col-lg-12">
+                    <h6 class="font-weight-bold pt-4 pb-1">Enter your aadhaar number here here:</h6>
+                    <input type="text" placeholder="Aadhaar number goes here" name="aadhaar_number" id="aadhaar_number" class="form-control bg-white">
+                  </div>                  
+                </div>
+                <button type="submit" class="btn btn-primary font-weight-bold mt-3">Submit</button>
+                <a href="{% url 'voters:list_elections' %}" class="btn btn-danger btn-sm font-weight-bold mt-3"> Cancel</a>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+$(document).ready(function(){
+$( "#myform" ).validate({
+ ignore: [],
+  rules: {
+    aadhaar_number: {
+      required: true,
+      digits: true,
+      minlength: 12,
+      maxlength: 12,
+    },
+  }
+});
+});
+</script>
+{% endblock %}
+<!-- custom js end-->

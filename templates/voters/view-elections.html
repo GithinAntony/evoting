@@ -1,0 +1,260 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<style>
+	th, td {
+		text-align: center;
+	}
+	.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #008374;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #008374;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+label.error {
+	font-weight: bolder;
+	 text-decoration: underline;
+	  text-align: center; 
+	  font-size: 18px !important; 
+}
+	.container-t h1 {
+        color: #333;
+        text-align: center;
+      }
+      .container-t p {
+        color: #666;
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+      .container-t {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .container-t .message {
+        color: #d9534f;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+      }
+</style>
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+
+<section class="advt-post bg-gray py-5">
+	<div class="row">
+		<div class="col-md-12 text-center">
+			{% if messages %}
+			<ul class="messages text-center">
+			{% for message in messages %}
+			 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			 {% endfor %}
+			 </ul>
+			 {% endif %}
+		</div>
+	</div>
+	<div class="container">
+
+		<!-- Post Your ad start -->
+		<form action="" method="post" id="myform" >
+			{% csrf_token %}
+		<fieldset class="border border-gary px-3 px-md-4 py-4 mb-5" style="background-color: white;">
+			{% if check_vote %}
+			<div class="row">
+				<div class="col-lg-12 container-t">
+					<h1>Election Voting Status</h1>
+					<p>We are sorry, but our records indicate that you have already voted in this election. If you believe this to be an error, please contact us for assistance.</p>
+					<div class="message">You have already voted</div>
+				  </div>
+			</div>    
+			{% else %}
+			<div class="row">
+				<div class="col-lg-12">
+				  <h3> Vote Here</h3>
+				</div>
+				{% if userdata_position %}	
+				{% for row1 in userdata_position %}
+				<div class="col-lg-12" >
+					<h6 class="font-weight-bold pt-4 pb-1">Position : {{ row1.postion_name|upper }}</h6>
+					{% if userdata %}
+					<table class="table" >
+						<thead>
+						  <tr>
+							<th>#</th>
+							<!-- <th>Photo</th> -->
+							<th>Candidate</th>
+							<th>Party</th>
+							<th>Symbol</th>
+							<th class="text-center">Action</th>
+						  </tr>
+						</thead>
+						<tbody>
+							{% for row in userdata %}
+							{% if row1.unique_id == row.position_id %}
+						  <tr>
+							<td>{{ forloop.counter }}</td>
+							<!--<td class="product-thumb">
+							  <img src="{{ row.candidates.profile_photo.url }}" height="100" alt="image description">
+							</td> -->		
+							<td class="product-details">
+								<img src="{{ row.candidates.profile_photo.url }}" height="100" alt="image description" class="avatar"> <br />
+							  <h3 class="title">{{ row.candidates.first_name }} {{ row.candidates.last_name }}</h3>                  
+							</td>
+							<td class="product-details" style="text-align: center;">
+								{% if row.party.party_image %} <img src="{{row.party.party_image.url}}" alt="{{row.party.party_name}}" style="max-width: 50px;"> {% endif %} 
+								<br />{{ row.party.party_name }}               
+							  </td>
+							<td class="product-thumb" style="text-align: center;">
+								<img src="{{ row.symbol.url }}" height="150" alt="image description" class="avatar" > <br >{{ row.symbol_name }}
+							  </td>
+							<td class="action" data-title="Action">
+								<label class="switch">
+									<input type="radio" name="caste_vote_{{ row.position_id }}" value="{{ row.unique_id }}" >
+									<span class="slider round"></span>
+								  </label>
+							</td>
+						  </tr>
+						  {% endif %}
+						  {% endfor %}
+						</tbody>
+					  </table>
+					  <div class="col-lg-12 error" id="caste_vote_error_{{ row1.unique_id }}" ></div>
+					  {% else %}
+					  <p><b>No Candidates found.</b></p>
+					  {% endif %}
+				</div>
+				{% endfor %}
+				{% else %}	
+				No position added
+				{% endif %}
+				<div class="col-lg-12" style="text-align: center;">
+					<hr />
+					<button type="submit" class="btn btn-primary" onclick="return confirm('Your vote is final and cannot be changed after it is cast, so please double-check your selection before confirming it.');" >SUBMIT VOTE</button>
+				</div>	
+				</div>	
+			{% endif %}
+		</fieldset>
+		</form>
+		<!-- Post Your ad end -->
+	</div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+$(document).ready(function(){
+$( "#myform" ).validate({
+ ignore: [],
+  rules: {
+{% if userdata_position %}	
+{% for row1 in userdata_position %} 
+caste_vote_{{ row1.unique_id }}: {
+      required: true,
+      digits: true,     
+    },
+{% endfor %}
+{% endif %}
+  }, 
+  messages: {
+{% if userdata_position %}	
+{% for row1 in userdata_position %} 
+	caste_vote_{{ row1.unique_id }}: "You must cast atleast one vote for {{ row1.postion_name }}",
+{% endfor %}
+{% endif %}
+  },
+  errorPlacement: function(error, element) {
+    if (false) {
+      error.insertAfter("#party_error");
+	} 
+	{% if userdata_position %}	
+	{% for row1 in userdata_position %}
+	 else if (element.attr("name") == "caste_vote_{{ row1.unique_id }}") {
+	error.insertAfter("#caste_vote_error_{{ row1.unique_id }}");
+	} 
+	{% endfor %}
+	{% endif %}
+	else {
+      // Default positioning for other fields
+      error.insertAfter(element);
+    }
+  		},
+});
+
+});
+</script>
+{% endblock %}
+<!-- custom js end-->

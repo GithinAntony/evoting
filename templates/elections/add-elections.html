@@ -1,0 +1,171 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+
+<section class="advt-post bg-gray py-5">
+
+	<div class="row">
+		<div class="col-md-12 text-center">
+			{% if messages %}
+			<ul class="messages text-center">
+			{% for message in messages %}
+			 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			 {% endfor %}
+			 </ul>
+			 {% endif %}
+		</div>
+	</div>
+
+	<div class="container">
+
+		
+	<div class="row">
+		<div class="col-md-12">
+		  <a href="{% url 'elections:list_elections' %}" class="btn btn-danger btn-sm pull-right" style="padding: .25rem .5rem;"><i class="fa fa-arrow-left"></i> Back</a>
+		</div>
+	  </div>
+	  <br />
+
+	  <form action="" method="POST" id="myform" method="post" role="form" enctype="multipart/form-data" >
+		{% csrf_token %}
+		<!-- Post Your ad start -->
+		<fieldset class="border border-gary px-3 px-md-4 py-4 mb-5">
+		  <div class="row">
+			<div class="col-lg-12">
+			  <h3>Add Elections</h3>
+			</div>
+			<div class="col-lg-6">
+			  <h6 class="font-weight-bold pt-4 pb-1">Title Of Election:</h6>
+			  <input type="text" name="title" id="title" class="form-control bg-white" placeholder="Election title go here"  >
+			  <h6 class="font-weight-bold pt-4 pb-1">Start Date/Time:</h6>
+			  <div class="row px-3">
+				  <div class="col-lg-8 rounded my-2 px-0">
+					<input type="datetime-local" name="start_date" id="start_date" class="form-control bg-white" placeholder="Start Date" >
+				  </div>
+			  </div>
+			  <h6 class="font-weight-bold pt-4 pb-1">Description:</h6>
+			  <textarea name="description" id="description" class="form-control bg-white" rows="7" placeholder="Write details about this election"></textarea>
+			</div>
+
+			<div class="col-lg-6">
+			  <h6 class="font-weight-bold pt-4 pb-1">Select Status:</h6>
+			  <select name="status" id="status" class="form-control w-100 bg-white" disabled>
+				<option value="pending">Pending</option>
+				<option value="active">Active</option>
+			  </select>
+			  <div class="price">
+				<h6 class="font-weight-bold pt-4 pb-1">End Date/Time:</h6>
+				<div class="row px-3">
+				  <div class="col-lg-8 rounded my-2 px-0">
+					<input type="datetime-local" name="end_date" id="end_date" class="form-control bg-white" placeholder="End Date">
+				  </div>
+				</div>
+			  </div>
+			  <h6 class="font-weight-bold pt-4">Logo:</h6>
+			  <div class="price">
+				<div class="row px-3">
+				  <div class="col-lg-8 rounded my-2 px-0">
+					<input type="file" class="form-control-file" id="logo_image" name="logo_image">
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</fieldset>
+		<!-- Post Your ad end -->
+		<!-- submit button -->
+		<button type="submit" class="btn btn-primary d-block mt-2">Submit</button>
+	  </form>
+	</div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+$(document).ready(function() {
+  // Add validation rules and messages
+  $("#myform").validate({
+    rules: {
+	title: {
+        required: true,
+		minlength: 10,
+		maxlength: 500,
+      },
+      start_date: {
+        required: true,
+		dateGreaterThanOrEqual: new Date() 
+      },
+	  end_date: {
+        required: true,
+		greaterThan: "#start_date",
+		dateGreaterThanOrEqual: new Date() 
+      },
+      description: {
+        required: true
+      },
+      status: {
+        required: false
+      },
+      logo_image: {
+        required: true,
+		extension:'png,jpg,jpeg'
+      }
+    },
+    messages: {
+	title: {
+        required: "Please enter the title of the election."
+      },
+      start_date: {
+        required: "Please select the start date/time of the election."
+      },
+	  end_date: {
+        required: "Please select the end date/time of the election.",
+		greaterThan: "The end date must be greater than the start date.",
+		dateGreaterThanOrEqual: "Please specify a valid date."
+      },
+      description: {
+        required: "Please enter a description for the election."
+      },
+      status: {
+        required: "Please select the status of the election."
+      },
+      logo_image: {
+        required: "Please select a logo for the election."
+      }
+    }
+  });
+
+  $.validator.addMethod("greaterThan", function(value, element, param) {
+        return new Date(value) > new Date($(param).val());
+      }, "Please specify a valid date.");
+
+  $.validator.addMethod("dateGreaterThanOrEqual", function(value, element, param) {
+    // Convert the date values to Date objects and compare them with today's date
+    return new Date(value) >= param;
+  }, "Please specify a valid date that is greater than or equal to today's date.");
+
+});
+</script>
+
+{% endblock %}
+<!-- custom js end-->

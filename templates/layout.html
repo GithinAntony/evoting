@@ -1,0 +1,83 @@
+  {% load static %}
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  
+    <!-- ** Basic Page Needs ** -->
+    <meta charset="utf-8">
+    <title>
+    {% block title %}
+    {% endblock %}  
+    </title>
+    <!-- ** Mobile Specific Metas ** -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Agency HTML Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="author" content="Themefisher">
+    <meta name="generator" content="Themefisher Classified Marketplace Template v1.0">
+    
+    <!-- theme meta -->
+    <meta name="theme-name" content="evoting" />
+  
+    <!-- favicon -->
+    <link href="{% static 'images/favicon.png' %}" rel="shortcut icon">
+  
+    <!-- 
+    Essential stylesheets
+    =====================================-->
+    <link href="{% static 'plugins/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/bootstrap/bootstrap-slider.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/slick/slick.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/slick/slick-theme.css' %}" rel="stylesheet">
+    <link href="{% static 'plugins/jquery-nice-select/css/nice-select.css' %}" rel="stylesheet">
+    
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    {% block css %}
+    {% endblock %}  
+
+  
+  </head>
+  
+  <body class="body-wrapper">
+  
+  {% include "includes/header.html" %}
+
+  <!--===============================
+  =            Hero Area            =
+  ================================-->
+
+  {% block content %}
+  {% endblock %}
+
+  <!--============================
+  =            Footer            =
+  =============================-->
+  {% include "includes/footer.html" %}
+  <!-- 
+  Essential Scripts
+  =====================================-->
+  <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'plugins/bootstrap/popper.min.js' %}"></script>
+  <script src="{% static 'plugins/bootstrap/bootstrap.min.js' %}"></script>
+  <script src="{% static 'plugins/bootstrap/bootstrap-slider.js' %}"></script>
+  <script src="{% static 'plugins/tether/js/tether.min.js' %}"></script>
+  <script src="{% static 'plugins/raty/jquery.raty-fa.js' %}"></script>
+  <script src="{% static 'plugins/slick/slick.min.js' %}"></script>
+  <script src="{% static 'plugins/jquery-nice-select/js/jquery.nice-select.min.js' %}"></script>
+  <!-- google map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCcABaamniA6OL5YvYSpB3pFMNrXwXnLwU" defer></script>
+  <script src="{% static 'plugins/google-map/map.js' %}" defer></script>
+  
+  <script src="{% static 'js/script.js' %}"></script>
+
+  {% block js %}
+  {% endblock %}
+  
+  </body>
+  </html>
+  
+  
+  
+  

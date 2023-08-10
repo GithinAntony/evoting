@@ -1,0 +1,236 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<style>
+  	th, td {
+		text-align: center;
+	}
+.featured-product-box {
+    padding: 15px;
+    position: relative;
+    border-radius: 4px;
+    background: #fff;	
+}
+.box-shadow {
+    border: 1px solid #eae8f5;
+    box-shadow: 0 0 0 1px rgb(67 41 163 / 8%), 0 1px 5px 0 rgb(67 41 163 / 8%);
+}
+.featured-product-box .featured-pro-title {
+    border-bottom: 1px solid #eae8f5;
+    margin-bottom: 20px;
+}
+.featured-product-box .featured-pro-bottom {
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+</style>
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+				<h3>Results</h3>
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+<section class="advt-post bg-gray py-5">
+	<div class="container">
+		<!-- Post Your ad start -->
+		<form action="" method="post" id="myform" >
+			{% csrf_token %}
+			{% if messages %}
+			<ul class="messages text-center">
+			{% for message in messages %}
+			 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			 {% endfor %}
+			 </ul>
+			 {% endif %}
+
+	<fieldset class="border border-gary px-3 px-md-4 py-4 mb-5" style="background-color: white;">
+      <div class="row">
+				<div class="col-lg-12">
+				  <h3> Election Results - <text style="color: blue;">{{ election.title }}</text> </h3>				  
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<div class="col-lg-12 text-center" >					
+					<h2 style="color: darkgreen; font-weight: bolder; text-decoration: underline;" >WINNERS</h2>
+					<hr />
+				</div>
+			</div>
+
+			<div class="row">
+			
+				{% if userdata_position %}	
+				{% for row1 in userdata_position %}
+					
+					{% if results %}
+							{% for key,row in results.items %}
+							{% if row1.unique_id == key %}
+              {% for values in row %}
+			  {% if forloop.first %}
+
+			  <div class="col-lg-6 mt-3"> 
+				<div class="featured-product-box box-shadow">
+
+					<div class="featured-pro-title">
+						<h4 class="fs-22"><strong class="text-color-primary"> Position: </strong> {{ row1.postion_name|upper }}</h4>
+					</div>
+
+					<div class="featured-pro-content">
+						<div class="featured-pro-text">
+							<h6><a href="#"> {{ values.candidates.first_name }} {{ values.candidates.last_name }} </a></h6>
+						</div>
+					</div>
+
+					<div class="featured-pro-img">
+						<img src="{{ values.candidates.profile_photo }}" alt="pro-img" class="img-fluid mx-auto d-block" style="height: 200px !important;">
+					</div>
+
+					<div class="row mt-4">
+
+						<div class="col-lg-6 text-center">
+							<img src="{{ values.candidates.party_image }}" alt="Img" style="max-width: 50px;"> 
+							<br />{{ values.candidates.party_name }}  
+						</div>
+
+						<div class="col-lg-6 text-center">
+							<img src="{{ values.candidates.symbol }}" height="150" alt="Img" class="avatar" >
+							 <br >{{ values.candidates.symbol_name }}
+						</div>
+
+					</div>
+
+					<div class="featured-pro-bottom">
+
+						<div class="row">
+
+							<div class="col-lg-6">
+								<ul>
+									<li>Total Votes: <strong>{{ values.total_votes }}</strong></li>
+								</ul>
+							</div>
+	
+							<div class="col-lg-6">
+								<ul>
+									<li><strong style="color: darkgreen;">Winner</strong> </li>
+								</ul>
+							</div>
+	
+						</div>
+
+					</div>
+
+				</div>	
+			</div>
+
+			  {% endif %}						  
+              {% endfor %}
+						  {% endif %}
+						  {% endfor %}
+					  {% else %}
+					  <p><b>No Candidates found.</b></p>
+					  {% endif %}
+				{% endfor %}
+				{% else %}	
+				No position added
+				{% endif %}	
+
+
+	
+			</div>		
+
+
+			<div class="row mt-5">
+				<div class="col-lg-12">
+				  <h3> Complete Election Overview </h3>			
+				  <hr />	  
+				</div>
+			</div>
+
+<div class="row">
+				{% if userdata_position %}	
+				{% for row1 in userdata_position %}
+				<div class="col-lg-12" >
+					<h6 class="font-weight-bold pt-4 pb-1">Position : {{ row1.postion_name|upper }}</h6>
+					{% if results %}
+					<table class="table" >
+						<thead>
+						  <tr>
+							<th>#</th>
+							<!-- <th>Photo</th> -->
+							<th>Candidate</th>
+							<th>Party</th>
+							<th>Symbol</th>
+							<th class="text-center">Total Votes</th>
+              				<th>#</th>
+						  </tr>
+						</thead>
+						<tbody>
+							{% for key,row in results.items %}
+							{% if row1.unique_id == key %}
+              {% for values in row %}
+						  <tr>
+							<td style="width: 5%;">{{ forloop.counter }} </td>
+							<!--<td class="product-thumb">
+							  <img src="{{ row.candidates.profile_photo.url }}" height="100" alt="image description">
+							</td> -->		
+							<td class="product-details" style="width: 30%;">
+								<img src="{{ values.candidates.profile_photo }}" height="100" alt="image description" class="avatar"> <br />
+							  <h3 class="title">{{ values.candidates.first_name }} {{ values.candidates.last_name }}</h3>                  
+							</td>
+							<td class="product-details" style="text-align: center; width: 25%;">
+								{% if values.candidates.party_image %} <img src="{{ values.candidates.party_image }}" alt="{{ values.candidates.party_name }}" style="max-width: 50px;"> {% endif %} 
+								<br />{{ values.candidates.party_name }}               
+							  </td>
+							<td class="product-thumb" style="text-align: center; width: 15%">
+								<img src="{{ values.candidates.symbol }}" height="150" alt="image description" class="avatar" > <br >{{ values.candidates.symbol_name }}
+							  </td>
+							<td class="action" data-title="Action" style="width: 15%">
+								{{ values.total_votes }}
+							</td>
+              <td style="width: 10%" >
+                {% if forloop.first %}
+                <b style="color: darkgreen;">Winner</b>
+                {% endif %}
+              </td>
+						  </tr>
+              {% endfor %}
+
+						  {% endif %}
+						  {% endfor %}
+						</tbody>
+					  </table>
+					  <div class="col-lg-12 error" id="caste_vote_error_{{ row1.unique_id }}" ></div>
+					  {% else %}
+					  <p><b>No Candidates found.</b></p>
+					  {% endif %}
+				</div>
+				{% endfor %}
+				{% else %}	
+				No position added
+				{% endif %}	
+</div>
+		</fieldset>
+		</form>
+		<!-- Post Your ad end -->
+	</div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+{% endblock %}
+<!-- custom js end-->

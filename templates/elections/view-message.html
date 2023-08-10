@@ -1,0 +1,195 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<style>
+	#chat2 .form-control {
+	  border-color: 1px solid rgba(0,0,0,.125);
+	  background-color: #F5F5F5 !important;
+	}
+  
+	#chat2 .form-control:focus {
+	  border-color: 1px solid rgba(0,0,0,.125);
+	  box-shadow: inset 0px 0px 0px 1px transparent;
+	}
+  
+	.divider:after,
+	.divider:before {
+	  content: "";
+	  flex: 1;
+	  height: 1px;
+	  background: #eee;
+	}
+	.error {
+	  width: 100%; 
+	  text-align: center;
+	}
+	.card-header {
+		background-color: white;
+	}
+	.card-footer {
+		background-color: white;
+	}
+  </style> 
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+
+<section class="advt-post bg-gray py-5">
+
+	<div class="row">
+		<div class="col-md-12 text-center">
+			{% if messages %}
+			<ul class="messages text-center">
+			{% for message in messages %}
+			 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			 {% endfor %}
+			 </ul>
+			 {% endif %}
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<a href="{% url 'elections:messages_list' %}" class="btn btn-danger btn-sm pull-right" style="padding: .25rem .5rem;"><i class="fa fa-arrow-left"></i> Back</a>
+			
+			</div>
+		</div>	
+		<br />
+		<div class="row">
+			<div class="col-md-5">
+				
+				<div class="sidebar">
+					<!-- User Widget -->
+					<div class="widget user-dashboard-profile">
+					  <!-- User Image -->
+					  <div class="profile-thumb">
+						<img src="{{ userdata.profile_photo.url }}" alt="" class="rounded-circle">
+					  </div>
+					  <!-- User Name -->
+					  <h5 class="text-center">{{ userdata.first_name }} {{ userdata.last_name }}</h5>
+					  <p>Joined {{ userdata.date_added }}</p>					 
+					</div>						  
+				  </div>
+				  <div class="widget disclaimer">
+					<h5 class="widget-header">Details</h5>
+					<ul>
+						<li><b>Email Adrress:</b> {{ userdata.email_address }} </li>
+						<li><b>Mobile Number:</b> {{ userdata.mobile_number }} </li>
+						<li><b>Aadhaar Number:</b> {{ userdata.aadhaar_number }} </li>									
+					</ul>
+				</div>
+
+
+			</div>
+			<div class="col-md-7">
+				<div class="card" id="chat2" style="border-radius: 0px;">
+				  <div class="card-header d-flex justify-content-between align-items-center p-3">
+					<h5 class="mb-0">Chat</h5>
+				  </div>
+				  <div class="card-body" data-mdb-perfect-scrollbar="true"> 
+					{% if user_messages.count > 0 %} 
+					{% for row in user_messages %}   
+				
+					{% if row.participant_user_id != request.session.user_id  %}
+
+					{% if row.message_type == 'candidates_accepted' %}
+					<div class="d-flex flex-row justify-content-end" style="margin-bottom: 50px;">
+						<div style="background-color: rgba(0, 128, 0, 0.5); width: 100% !important; text-align: center;">
+						  <p class="p-2 ms-3 mb-0 rounded-3" style="font-size: 22px !important; font-weight: bolder; color: white;" ><u>Candidacy Accepted</u></p>
+						  <p class="p-2 ms-3 mb-1 rounded-3" style="font-size: 18px !important; color: white;" >{{ row.messages_text }}</p>
+						  <p class="small ms-3 mb-3 rounded-3 text-muted" style="font-size: 15px !important; color: white !important;" >{{ row.date_added }}</p>
+						</div>
+					</div> 
+					{% elif row.message_type == 'candidates_rejected' %}
+					<div class="d-flex flex-row justify-content-end" style="margin-bottom: 50px;">
+						<div style="background-color: rgba(255, 0, 0, 0.5); width: 100% !important; text-align: center;">
+						  <p class="p-2 ms-3 mb-0 rounded-3" style="font-size: 22px !important; font-weight: bolder; color: white;" ><u>Candidacy Rejected</u></p>
+						  <p class="p-2 ms-3 mb-1 rounded-3" style="font-size: 18px !important; color: white;" >{{ row.messages_text }}</p>
+						  <p class="small ms-3 mb-3 rounded-3 text-muted" style="font-size: 15px !important; color: white !important;" >{{ row.date_added }}</p>
+						</div>
+					</div> 
+					{% elif row.message_type == 'campaign' %}
+					<div class="d-flex flex-row justify-content-end" style="margin-bottom: 50px;">
+						<div style="background-color: rgba(255, 255, 0, 0.5); width: 100% !important; text-align: center;">
+						  <p class="p-2 ms-3 mb-0 rounded-3" style="font-size: 22px !important; font-weight: bolder; color: blue;" ><u>Election Campign</u></p>
+						  <p class=" ms-3 mb-1 rounded-3" style="font-size: 18px !important; color: blue;" >{{ row.messages_text }}</p>
+						  <p class="small ms-3 mb-3 rounded-3 text-muted" style="font-size: 15px !important; color: blue;" >{{ row.date_added }}</p>
+						</div>
+					</div> 
+					{% else %}
+					<div class="d-flex flex-row justify-content-start mb-4">
+						<img src="{% static 'images/ava3-bg.webp' %}" alt="avatar 1" style="width: 45px; height: 100%;">
+						<div>
+						  <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">{{ row.messages_text }}</p>
+						  <p class="small ms-3 mb-3 rounded-3 text-muted">{{ row.participant_user.first_name }} {{ row.participant_user.last_name }}, {{ row.date_added }}</p>
+						</div>
+					  </div>
+					{% endif %}
+
+					 {% else %}
+					 <div class="d-flex flex-row justify-content-end">
+					  <div>
+						<p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">{{ row.messages_text }}</p>
+						<p class="small me-3 mb-3 rounded-3 text-muted d-flex justify-content-end">{{ row.participant_user.first_name }} {{ row.participant_user.last_name }}, {{ row.date_added }}</p>
+					  </div>
+					  <img src="{% static 'images/ava3-bg.webp' %}" alt="avatar 1" style="width: 45px; height: 100%;">
+					</div> 
+					{% endif %} 
+					{% endfor %}
+					{% else %} 
+					<span>No messages added...</span>
+					{% endif %} 
+					</div>
+					<form action="" method="POST" id="form_1">
+					  {% csrf_token %} 
+					  <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+					  <img src="{% static 'images/ava3-bg.webp' %}" alt="avatar 3" style="width: 40px; height: 100%;">
+					  <input type="text" class="form-control form-control-lg" id="message" name="message" placeholder="Type message" />
+					  <input type="submit" class="btn btn-primary" value="Send" />
+					  </div>
+				  </form>
+				</div>
+			  </div>
+		</div>
+	</div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+$(document).ready(function() {
+	
+	$("#form_1").validate({
+      ignore: [],
+      errorPlacement: function(error, element) {
+        error.insertAfter(element.parent());
+      },
+      rules: {
+        message: {
+          required: true,
+          minlength: 1,
+          maxlength: 255
+        },
+      }
+    });
+});
+</script>
+{% endblock %}
+<!-- custom js end-->

@@ -1,0 +1,231 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="hero-area bg-1 text-center overly" style="margin-top: 80px !important;">
+  <!-- Container Start -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Header Contetnt -->
+        <div class="content-block">
+          <h1>Safe E-Voting for All</h1>
+          <p>It’s Election Day-Go Vote! <br> Hello to secure and accessible E-Voting</p>
+          <div class="short-popular-category-list text-center">
+            <h2>Popular Category</h2>
+            <ul class="list-inline">
+              <li class="list-inline-item">
+                <a href=""><i class="fa fa-bed"></i> Elections</a></li>
+              <li class="list-inline-item">
+                <a href=""><i class="fa fa-grav"></i> Candidates</a>
+              </li>
+              <li class="list-inline-item">
+                <a href=""><i class="fa fa-car"></i> Voters</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+        <!-- Advance Search -->
+        <div class="advance-search" style="display: none;">
+          <div class="container">
+            <div class="row justify-content-center">
+              <div class="col-lg-12 col-md-12 align-content-center">
+                <form>
+                  <div class="form-row">
+                    <div class="form-group col-xl-4 col-lg-3 col-md-6">
+                      <input type="text" class="form-control my-2 my-lg-1" id="inputtext4"
+                        placeholder="What are you looking for">
+                    </div>
+                    <div class="form-group col-lg-3 col-md-6">
+                      <select class="w-100 form-control mt-lg-1 mt-md-2">
+                        <option>Category</option>
+                        <option value="1">Top rated</option>
+                        <option value="2">Lowest Price</option>
+                        <option value="4">Highest Price</option>
+                      </select>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-6">
+                      <input type="text" class="form-control my-2 my-lg-1" id="inputLocation4" placeholder="Location">
+                    </div>
+                    <div class="form-group col-xl-2 col-lg-3 col-md-6 align-self-center">
+                      <button type="submit" class="btn btn-primary active w-100">Search Now</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container End -->
+</section>
+
+
+<!--===========================================
+=            Popular deals section            =
+============================================-->
+
+<section class="popular-deals section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="section-title">
+          <h2>Welcome to Our Website</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- offer 01 -->
+      <div class="col-lg-12">
+        <h3>About Us</h3>
+        <p>
+          At e-voting, we are dedicated to revolutionizing the way we participate in elections. Our platform aims to bring secure, convenient, and transparent voting to the digital realm. We believe that technology can play a crucial role in enhancing the democratic process and ensuring widespread access to voting.
+        </p>
+        <h3>Our Mission</h3>
+        <p>
+          Our mission is to empower citizens by providing them with a modern and efficient voting experience. We strive to make voting more accessible, inclusive, and trustworthy through the use of advanced technology and robust security measures. By embracing innovation, we aim to strengthen the democratic principles of transparency, fairness, and equal representation.
+
+          Your participation is crucial to the success of our platform. Register as a voter, explore candidate profiles, and exercise your democratic right to vote. Join us in shaping the future of elections through secure and accessible digital voting.
+        </p>
+        <h3>Contact Us</h3>
+        <p>
+            We would be delighted to hear from you! If you have any questions, feedback, or inquiries, please feel free
+            to contact us. You can reach us by email, phone, or through the contact form on our website. We are available
+            to assist you and provide further information about our services.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="popular-deals section bg-gray">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="section-title">
+          <h2>Trending Adds</h2>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- offer 01 -->
+      <div class="col-lg-12">
+        <div class="trending-ads-slide">
+{% if election_candidates %}
+{% for row in election_candidates %}
+          <div class="col-sm-12 col-lg-4">
+            <!-- product card -->
+            <div class="product-item bg-light">
+              <div class="card">
+                <div class="thumb-content" style="box-shadow: 0px 1px 3px 0px rgb(0 0 0 / 10%);" >
+                  <!-- <div class="price">$200</div> -->
+                  <a href="">
+                    <img class="" src="{{ row.candidates.profile_photo.url }}" alt="Card image cap" style="height: 180px !important; width: auto; margin: 0 auto; padding: 10px;">
+                  </a>
+                </div>
+
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-lg-12 text-center">
+                    <h4 class="card-title"><a href="">{{ row.candidates.first_name }} {{ row.candidates.last_name }}</a></h4>
+                    <span>( <a href="">{{ row.position.postion_name }}</a> )</span>
+
+                  </div>
+                  </div>
+
+
+          <div class="row mt-3">
+	          <div class="col-lg-6 text-center">
+							<img src="{{ row.party.party_image.url }}" alt="Img" style="max-width: 30px; display: initial !important;"> 
+							<br />{{ row.party.party_name }}  
+						</div>
+
+						<div class="col-lg-6 text-center">
+							<img src="{{ row.symbol.url }}" alt="Img" class="avatar" style="max-width: 30px; display: initial !important;" >
+							 <br >{{ row.symbol_name }}
+						</div>
+            </div>
+               
+
+                </div>
+              </div>
+            </div>
+            
+          </div>
+{% endfor %}
+{% else %}
+<p>No candidates available.</p>
+{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--==========================================
+=            All Category Section            =
+===========================================-->
+<section class=" section">
+  <!-- Container Start -->
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <!-- Section title -->
+        <div class="section-title">
+          <h2>About Us</h2>
+        </div>
+        <div class="row">
+
+
+          <div class="col-lg-12">
+
+<p>Welcome to e-voting!</p>
+
+<p>At e-voting, we are dedicated to revolutionizing the way we participate in elections. Our platform aims to bring secure, convenient, and transparent voting to the digital realm. We believe that technology can play a crucial role in enhancing the democratic process and ensuring widespread access to voting.</p>
+
+<h3>Our Mission</h3>
+
+<p>Our mission is to empower citizens by providing them with a modern and efficient voting experience. We strive to make voting more accessible, inclusive, and trustworthy through the use of advanced technology and robust security measures. By embracing innovation, we aim to strengthen the democratic principles of transparency, fairness, and equal representation.</p>
+
+<h3>What We Offer</h3>
+
+<ul>
+  <li>Secure Online Voting: We offer a secure and tamper-proof online voting platform that allows registered voters to cast their ballots from the comfort of their own homes or any location with internet access. Our system ensures the integrity of each vote and maintains strict privacy protocols.</li>
+  <li>Convenient and Time-Efficient: With e-voting, voters no longer need to visit physical polling stations or adhere to specific voting hours. Our platform provides flexibility, allowing individuals to vote at their convenience within the designated voting period.</li>
+  <li>Transparent and Trustworthy: We prioritize transparency in the voting process. Our platform utilizes advanced encryption technologies and rigorous security protocols to safeguard the integrity of the election. Each vote is recorded and stored securely, ensuring accuracy and preventing tampering.</li>
+  <li>Access to Information: We provide comprehensive information on candidates, parties, and election-related news to help voters make informed decisions. Our platform serves as a hub of knowledge, offering insights into the backgrounds, policies, and priorities of those seeking public office.</li>
+</ul>
+
+<h3>Our Commitment</h3>
+
+<p>We are committed to upholding the highest standards of security, privacy, and reliability. Our team works tirelessly to develop and maintain a robust infrastructure that protects the integrity of each vote and ensures a seamless voting experience for all participants. We adhere to strict data protection regulations and prioritize the privacy of our users.</p>
+
+<h3>Get Involved</h3>
+
+<p>Your participation is crucial to the success of our platform. Register as a voter, explore candidate profiles, and exercise your democratic right to vote. Join us in shaping the future of elections through secure and accessible digital voting.</p>
+
+<p>We appreciate your trust in e-voting and remain dedicated to improving the democratic process for all.</p>
+
+<p>Happy voting with e-voting!</p>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Container End -->
+</section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+{% endblock %}
+<!-- custom js end-->

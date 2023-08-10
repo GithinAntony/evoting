@@ -1,0 +1,83 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<style>
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+      p {
+        color: #666;
+        font-size: 18px;
+        line-height: 1.5;
+        margin-bottom: 20px;
+      }
+      .container-t {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+	  .container-t .message {
+        color: green;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+      }
+</style>
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+
+<section class="advt-post bg-gray py-5">
+	<div class="row">
+		<div class="col-md-12 text-center">
+			{% if messages %}
+			<ul class="messages text-center">
+			{% for message in messages %}
+			 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			 {% endfor %}
+			 </ul>
+			 {% endif %}
+		</div>
+	</div>
+	<div class="container">
+		<!-- Post Your ad start -->
+		<fieldset class="border border-gary px-3 px-md-4 py-4 mb-5" style="background-color: white;">
+		  <div class="row">
+
+			<div class="container-t">
+				<h1>E-Voting Process Completed</h1>
+				<div class="message">Thanks for voting</div>
+				<p>Thank you for participating in our e-voting process. Your vote has been recorded and will be counted along with those of other eligible voters. We appreciate your commitment to democracy and civic engagement.</p>
+				<p>Please note that the results of the election will be announced in due time, following the necessary verification and tabulation processes. We encourage you to stay informed about the outcome of the election and to continue to exercise your right to vote in future elections.</p>
+				<p>If you have any questions or concerns about the e-voting process or the election in general, please do not hesitate to contact us. We are committed to ensuring that the election is conducted fairly, transparently, and with the highest standards of integrity.</p>
+				<p>Thank you again for your participation and support.</p>
+			  </div>
+
+			</div>		 
+		</fieldset>
+		<!-- Post Your ad end -->
+	</div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+{% endblock %}
+<!-- custom js end-->

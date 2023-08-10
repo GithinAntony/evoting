@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+				<h3>Contact Us</h3>
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+<!-- page title -->
+
+<!-- contact us start-->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="contact-us-content p-4">
+                    <h5>Contact Us</h5>
+                    <h3 class="pt-3">Hello, what's on your mind?</h3>
+                    <p class="pt-3 pb-5">If you have any questions or concerns regarding our e-voting system, please don't hesitate to contact us using the information below. Our team is available to provide you with the support and assistance you need to ensure a smooth and secure voting experience.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <form action="" method="post" id="myform" name="myform" >
+                    {% csrf_token %}
+                    {% if messages %}
+                    <ul class="messages text-center">
+                    {% for message in messages %}
+                     <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                     {% endfor %}
+                     </ul>
+                     {% endif %}
+                    <fieldset class="p-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-6 py-2">
+                                    <input type="text" id="full_name" name="full_name" placeholder="Name *" class="form-control">
+                                </div>
+                                <div class="col-lg-6 pt-2">
+                                    <input type="email" id="email_address" name="email_address" placeholder="Email *" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <textarea id="message" name="message" placeholder="Message *" class="border w-100 p-3 mt-lg-4"></textarea>
+                        <br />
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary mt-2 float-right">SUBMIT</button>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- contact us end -->
+
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+    $(document).ready(function() {
+        $('#myform').validate({
+            rules: {
+                full_name: 'required',
+                email_address: {
+                    required: true,
+                    email: true
+                },
+                message: 'required'
+            },
+            messages: {
+                full_name: 'Please enter your name',
+                email_address: {
+                    required: 'Please enter your email address',
+                    email: 'Please enter a valid email address'
+                },
+                message: 'Please enter a message'
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+{% endblock %}
+<!-- custom js end-->

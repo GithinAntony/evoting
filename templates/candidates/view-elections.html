@@ -1,0 +1,313 @@
+{% extends 'layout.html' %} {% block title %} eVoting {% endblock %} {% load static %}
+<!-- custom css --> {% block css %} <style>
+  .info-row {
+    padding: 5px;
+  }
+</style> 
+{% endblock %}
+<!-- custom css end--> 
+{% block content %} 
+<section class="page-title">
+  <!-- Container Start -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2 text-center">
+        <!-- Title text -->
+      </div>
+    </div>
+  </div>
+  <!-- Container End -->
+</section>
+<section class="dashboard section bg-gray py-5">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="{% url 'candidates:list_elections' %}" class="btn btn-danger btn-sm pull-right" style="padding: .25rem .5rem;"><i class="fa fa-arrow-left"></i> Back</a>
+      </div>
+    </div>
+    <br />
+  
+    <div class="row">
+      <div class="col-md-12 text-center"> 
+        {% if messages %} 
+        <ul class="messages text-center"> 
+        {% for message in messages %} 
+        <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li> 
+        {% endfor %} 
+        </ul>
+         {% endif %} 
+    </div>
+    </div>
+    <!-- Post Your ad start -->
+    <fieldset class="border border-gary px-3 px-md-4 py-4 mb-5">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="widget personal-info">
+            <h3 class="widget-header user">View Elections</h3>
+            <div class="container mt-5">
+              
+              <div class="row">
+                <div class="col-lg-12">
+              
+                      <div class="row">
+                        <div class="col-lg-4"> {% if election.logo_image %} <img src="{{ election.logo_image.url }}" alt="Logo" style="width: 100%;"> {% endif %} </div>
+                        <div class="col-lg-8">
+                          <h2 class="card-title">
+                            <u>{{ election.title|capfirst }}</u>
+                          </h2>
+                          <p class="card-text">{{ election.description|capfirst }}</p>
+                          <div class="election-info">
+                            <div class="info-row">
+                              <div class="info-label">
+                                <span class="label-text">
+                                  <b>Start Date:</b>
+                                </span> {{ election.election_start_date_time }}
+                              </div>
+                            </div>
+                            <div class="info-row">
+                              <div class="info-label">
+                                <span class="label-text">
+                                  <b>End Date:</b>
+                                </span> {{ election.election_end_date_time }}
+                              </div>
+                            </div>
+                            <div class="info-row">
+                              <div class="info-label">
+                                <span class="label-text">
+                                  <b>Status:</b>
+                                </span> {{ election.status }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div> 
+            {% if candidates_election is None or candidates_election.status == 'pending' %} 
+					              <form action="" method="post" id="myform" name="myform" enctype="multipart/form-data"> 
+						{% csrf_token %}
+						            <div class="row">
+                          <div class="col-lg-12">
+                            <div class="row mt-3">
+                              <div class="col-lg-12" style="color: green; font-weight: bold; text-decoration: underline;"> * You can apply for each party and position. Your candidacy will be approved by the election officer if eligible. </div>
+                              <div class="col-lg-6 mt-3">
+                                <h3 class="widget-header user">Political Parties</h3>
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>Party Image</th>
+                                      <th>Party Name</th>
+                                      <th>Tag Line</th>
+                                      <th style="width: 100px">Actions</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody> {% for party in election.election_parties_conn.all %} <tr>
+                                      <td>
+                                        {{ forloop.counter }}
+                                      </td>
+                                      <td> {% if party.party_image %} <img src="{{party.party_image.url}}" alt="{{party.party_name}}" style="max-width: 50px;"> {% endif %} </td>
+                                      <td>{{party.party_name}}</td>
+                                      <td>{{party.tag_line}}</td>
+                                      <td>
+                                        <input type="radio" name="party" value="{{ party.unique_id }}">
+                                      </td>
+                                    </tr> {% endfor %} </tbody>
+                                </table>
+								<div class="col-md-12 error" id="party_error"></div>
+                              </div>
+                              <div class="col-lg-6 mt-3">
+                                <h3 class="widget-header user">Postions</h3>
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>Position Name</th>
+                                      <th>Tag Line</th>
+                                      <th style="width: 100px">Actions</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody> {% for position in election.election_position_conn.all %} <tr>
+                                      <td>
+                                        {{ forloop.counter }}
+                                      </td>
+                                      <td>{{ position.postion_name }}</td>
+                                      <td>{{ position.tag_line }}</td>
+                                      <td>
+                                        <input type="radio" name="position" value="{{ position.unique_id }}">
+                                      </td>
+                                    </tr> {% endfor %} </tbody>
+                                </table>
+								<div class="col-md-12 error" id="position_error" ></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-lg-12">
+                            <h3 class="widget-header user">Candidate Details</h3>
+                          </div>
+                          <div class="col-lg-6">
+                            <!-- Current Password -->
+                            <label for="new-password">Election Symbol</label>
+                            <br />
+                            <div class="form-group choose-file d-inline-flex">
+                              <i class="fa fa-user text-center px-3"></i>
+                              <input type="file" class="form-control-file mt-2 pt-1" name="election_symbol" id="election_symbol">
+                            </div>
+                            <div class="col-md-12 error-msg" id="election_symbol_error"></div>
+                            <!-- New Password -->
+                            <div class="form-group">
+                              <label for="confirm-password">About Us</label>
+							  <textarea class="form-control" name="about_us" id="about_us" ></textarea>
+                            </div>
+                            <!-- Confirm New Password -->
+                            <label for="new-password">Election Manifestos</label>
+                            <br />
+                            <div class="form-group choose-file d-inline-flex">
+                              <i class="fa fa-user text-center px-3"></i>
+                              <input type="file" class="form-control-file mt-2 pt-1" name="election_manifestos" id="election_manifestos">
+                            </div>
+							<div class="col-md-12 error-msg" id="election_manifestos_error"></div>
+                          </div>
+                          <div class="col-lg-6">
+                            <!-- Current Password -->
+                            <div class="form-group">
+                              <label for="current-password">Symbol Name</label>
+                              <input type="text" class="form-control" name="symbol_name" id="symbol_name">
+                            </div>
+                            <!-- New Password -->
+                            <div class="form-group">
+                              <label for="confirm-password">Tag Line</label>
+							  <textarea class="form-control" name="tag_line" id="tag_line" ></textarea>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-lg-12">
+                            <button type="submit" class="btn btn-primary font-weight-bold pull-right mr-2">Save</button>
+                          </div>
+                        </div>
+                      </form> 
+                      {% else %} 
+                      <div class="row mt-3">
+
+                        {% if candidates_election.status == 'accepted' %}
+                        
+                        <div class="col-lg-12" style="color: green; font-weight: bold; text-decoration: underline;"> *Congratulations! Your candidacy has been accepted. We are delighted to inform you that you have been approved to participate in the upcoming elections. Best of luck with your campaign and thank you for your dedication to public service!</div>
+
+                        {% elif candidates_election.status == 'rejected' %}
+
+                        <div class="col-lg-12" style="color: red; font-weight: bold; text-decoration: underline;"> *We regret to inform you that your candidacy has been rejected. After careful consideration, the election officers have determined that we are unable to accept your application at this time. We appreciate your interest in participating, and we encourage you to continue your engagement in civic activities. Thank you for your understanding.</div>
+                        
+                        {% else %}
+
+                        <div class="col-lg-12" style="color: blue; font-weight: bold; text-decoration: underline;"> *You have applied. Wait till the election officers approve or reject you.</div>
+
+                        {% endif %}                                           
+                        <div class="col-lg-12 mt-3">
+                          <h3 class="widget-header user">Candidancy Details</h3>
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>#Candidancy ID</th>
+                                <th>Party Image</th>
+                                <th>Party Name</th>
+                                <th>Postion</th>
+                                <th>Status</th>
+                                <th style="width: 100px">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>#{{ candidates_election.unique_id }}</td>
+                                <td> {% if candidates_election.party.party_image %} <img src="{{candidates_election.party.party_image.url}}" alt="{{candidates_election.party.party_name}}" style="max-width: 75px;"> {% endif %} </td>
+                                <td>{{ candidates_election.party.party_name }}</td>
+                                <td>{{ candidates_election.position.postion_name }}</td>
+                                <td>
+                                  {% if candidates_election.status == 'accepted' %}
+                                  <b style="color: green;">Accepted</b>
+                                  {% elif candidates_election.status == 'rejected' %}
+                                  <b style="color: red;">Rejected</b>
+                                  {% else %}
+                                  <b style="color: blue;">Applied</b>
+                                  {% endif %}                                  
+                                </td>
+                                <td>
+                                  <a class="delete" data-toggle="tooltip" data-placement="top" title="Delete" href="{% url 'candidates:delete_elections' id=election.unique_id id2=candidates_election.unique_id %}">
+                                    <i class="fa fa-trash"></i>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      {% endif %}
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <!-- Post Your ad end -->
+  </div>
+</section> 
+{% endblock %}
+<!-- custom js --> 
+{% block js %} 
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+  $(document).ready(function() {
+    $("#myform").validate({
+      rules: {
+		party: {
+			required: true,
+		},
+		position: {
+			required: true,
+		},
+        election_symbol: {
+          required: true,
+          extension: 'png,jpg,jpeg',
+        },
+		symbol_name: {
+          required: true,
+		  maxlength: 200,
+          minlength: 3,
+        },
+		about_us: {
+          required: true,
+		  maxlength: 3000,
+          minlength: 50,
+        },
+        tag_line: {
+          required: true,
+          minlength: 2,
+          maxlength: 500
+        },
+        election_manifestos: {
+		  required: true,
+          extension: 'pdf,docx,doc',
+        },
+      },
+	errorPlacement: function(error, element) {
+    if (element.attr("name") == "party") {
+      // Custom positioning for about_us error messages
+      error.insertAfter("#party_error");
+    } else if (element.attr("name") == "position") {
+	error.insertAfter("#position_error");
+	} else if (element.attr("name") == "election_symbol") {
+	error.insertAfter("#election_symbol_error");
+	} else if (element.attr("name") == "election_manifestos") {
+	error.insertAfter("#election_manifestos_error");
+	} else {
+      // Default positioning for other fields
+      error.insertAfter(element);
+    }
+  		},
+    });
+  });
+</script> 
+{% endblock %}
+<!-- custom js end-->

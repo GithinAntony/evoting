@@ -1,0 +1,299 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+<section class="login py-5 border-top-1">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="section-title">
+            <h2>Election Officers</h2>
+            <p>E-voting is easy, but voters must be responsible to protect the vote's accuracy and integrity</p>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-12 col-md-8 align-item-center">
+          <div class="border border">
+            <h3 class="bg-gray p-4">Register Now</h3>
+            <form action="" method="post" id="myform" name="myform" enctype="multipart/form-data" >
+              {% csrf_token %}
+              {% if messages %}
+              <ul class="messages text-center">
+              {% for message in messages %}
+               <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+               {% endfor %}
+               </ul>
+               {% endif %}
+              <fieldset class="p-4">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">First Name:</h6>
+                    <input type="text" placeholder="First Name" name="first_name" id="first_name" class="form-control bg-white">
+                  </div>
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Last Name:</h6>
+                    <input type="text" placeholder="Last Name" name="last_name" id="last_name" class="form-control bg-white">
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Mobile Number:</h6>
+                    <input type="text" placeholder="Mobile Number" name="mobile_number" id="mobile_number" class="form-control bg-white">
+                  </div>
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Email Address:</h6>
+                    <input type="email" placeholder="Email Address" name="email_address" id="email_address" class="form-control bg-white">
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Password:</h6>
+                    <input type="password" placeholder="Password" name="password" id="password" class="form-control bg-white">
+                  </div>
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Confirm Password:</h6>
+                    <input type="password" placeholder="Confirm Password" name="confirm_password" id="confirm_password" class="form-control bg-white">
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Address Line 1:</h6>
+                    <input type="text" placeholder="Address Line 1" name="address_line_1" id="address_line_1" class="form-control bg-white">
+                  </div>
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Address Line 2:</h6>
+                    <input type="text" placeholder="Address Line 2" name="address_line_2" id="address_line_2" class="form-control bg-white">
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-lg-4">
+                    <h6 class="font-weight-bold pt-4 pb-1">District:</h6>
+                    <input type="text" placeholder="District" name="district" id="district" class="form-control bg-white">
+                  </div>
+                  <div class="col-lg-4">
+                    <h6 class="font-weight-bold pt-4 pb-1">State:</h6>
+                    <input type="text" placeholder="State" name="state" id="state" class="form-control bg-white">
+                  </div>
+                  <div class="col-lg-4">
+                    <h6 class="font-weight-bold pt-4 pb-1">Pin Code:</h6>
+                    <input type="text" placeholder="Pin Code" name="pin_code" id="pin_code" class="form-control bg-white">
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Profile Photo:</h6>
+                    <input type="file" placeholder="Profile Photo" name="profile_photo" id="profile_photo" class="form-control bg-white">
+                  </div>
+                  <div class="col-lg-6">
+                    <h6 class="font-weight-bold pt-4 pb-1">Aadhaar Number:</h6>
+                    <input type="text" placeholder="Aadhaar Number" name="aadhaar_number" id="aadhaar_number" class="form-control bg-white">
+                  </div>
+                </div>
+                                
+                <button type="submit" class="btn btn-primary d-block mt-4">Submit</button>
+                <a class="mt-3 d-block text-primary" href="{% url 'election_officers:sign_in' %}">Already registered, Login here...</a>
+              </fieldset>
+              
+            </form>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+  $(document).ready(function() {
+
+    $.validator.addMethod("checkPhoneExist", function(value, element) {
+      var exists = false;
+      $.ajax({
+        url: "{% url 'election_officers:signup_check_mobile' %}",
+        method: "POST",
+        data: {
+          mobile_number: value,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        async: false,
+        success: function(data) {
+          exists = data.exists;
+        }
+      });
+      return !exists;
+    }, "This mobile number already exists in the database."); 
+
+    $.validator.addMethod("checkEmailExist", function(value, element) {
+      var exists = false;
+      $.ajax({
+        url: "{% url 'election_officers:signup_check_email' %}",
+        method: "POST",
+        data: {
+          email_a: value,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        async: false,
+        success: function(data) {
+          exists = data.exists;
+        }
+      });
+      return !exists;
+    }, "This email address already exists in the database.");     
+
+    $.validator.addMethod("checkAadhaarExist", function(value, element) {
+      var exists = false;
+      $.ajax({
+        url: "{% url 'election_officers:signup_check_aadhaar' %}",
+        method: "POST",
+        data: {
+          aadhaar_number: value,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        async: false,
+        success: function(data) {
+          exists = data.exists;
+        }
+      });
+      return !exists;
+    }, "This aadhaar number already exists in the database.");      
+
+    $("#myform").validate({
+  rules: {
+    first_name: {
+      required: true,
+      digits: false,
+      minlength: 2,
+      maxlength: 255
+    },
+    last_name: {
+      required: true,
+      digits: false,
+      minlength: 2,
+      maxlength: 255
+    },
+    mobile_number: {
+      required: true,
+      digits: true,
+      minlength: 10,
+      maxlength: 10,
+      checkPhoneExist: true  
+    },
+    email_address: {
+      required: true,
+      email: true,
+      minlength: 8,
+      maxlength: 255,
+      checkEmailExist: true   
+    },
+    password: {
+      required: true,
+      minlength: 5,
+      maxlength: 35,
+    },
+    confirm_password: {
+      required: true,
+      minlength: 5,
+      maxlength: 35,
+      equalTo: "#password"
+    },
+    address_line_1: {
+      required: true,
+      minlength: 5,
+      maxlength: 255
+    },    
+    address_line_2: {
+      required: false,
+      maxlength: 255
+    },
+    district: {
+      required: true,
+      minlength: 2,
+      maxlength: 255
+    },
+    state: {
+      required: true,
+      minlength: 2,
+      maxlength: 255
+    },
+    pin_code: {
+      required: true,
+      digits: true,
+      minlength: 6,
+      maxlength: 6
+    },
+    aadhaar_number: {
+      required: true,
+      minlength: 12,
+      maxlength: 12,
+      digits: true,
+      checkAadhaarExist: true
+    }
+  },
+  messages: {
+    first_name: "Please enter your first name",
+    last_name: "Please enter your last name",
+    mobile_number: {
+      required: "Please enter your mobile number",
+      minlength: "Your mobile number must be at least 10 digits long"
+    },
+    email_address: {
+      required: "Please enter your email address",
+      email: "Please enter a valid email address"
+    },
+    password: {
+      required: "Please enter a password",
+      minlength: "Your password must be at least 8 characters long"
+    },
+    confirm_password: {
+      required: "Please confirm your password",
+      minlength: "Your password must be at least 8 characters long",
+      equalTo: "Your passwords do not match"
+    },
+    address_line_1: "Please enter your address",
+    district: "Please enter your district",
+    state: "Please enter your state",
+    pin_code: {
+      required: "Please enter your pin code",
+      minlength: "Your pin code must be at least 6 digits long"
+    },
+    profile_photo: "Please upload a profile photo",
+    aadhaar_number: {
+      required: "Please enter your Aadhaar number",
+      minlength: "Your Aadhaar number must be 12 digits long",
+      maxlength: "Your Aadhaar number must be 12 digits long",
+      digits: "Your Aadhaar number must contain only digits"
+    }
+  }
+});
+
+
+});
+</script>
+{% endblock %}
+<!-- custom js end-->

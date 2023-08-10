@@ -1,0 +1,137 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<link href="{% static 'plugins/datatables/datatables.min.css' %}" rel="stylesheet"/>
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+
+<section class="dashboard section">
+	<div class="container">
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="section-title">
+              <h2>Voters</h2>
+          </div>
+      </div>
+  </div>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                {% if messages %}
+                <ul class="messages text-center">
+                {% for message in messages %}
+                 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                 {% endfor %}
+                 </ul>
+                 {% endif %}
+            </div>
+            
+          <div class="col-md-12">
+            <ul class="navbar-nav ml-auto mt-10 pull-right">
+              <li class="nav-item">
+                <a class="nav-link text-white add-button" href="{% url 'elections:message_campaign' %}"><i class="fa fa-plus-circle"></i> Campaign</a>
+              </li>
+            </ul>
+          </div>
+          <br /><br />
+        </div>
+
+		<div class="row">
+			<div class="col-lg-12">
+                {% if list_userdata %}
+                <table class="table table-bordered bordered table-striped table-condensed datatable custom-table" id="example" >
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in list_userdata %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+
+                        <td class="product-thumb">
+                          <img src="{{ row.profile_photo.url }}" height="50" alt="image description" class="avatar" >
+                        </td>
+
+                        <td class="product-details">
+                          <h3 class="title">{{ row.first_name }} {{ row.last_name }}</h3>
+                          <span class="add-id"><strong>Aadhaar ID:</strong> {{ row.aadhaar_number }}</span>  <br />                      
+                          <span class="location"><strong>Location:</strong> {{ row.district }}, {{ row.state }}</span>
+                        </td>
+
+                        <td class="product-category"><span class="categories">{{ row.email_address }}</span></td>
+
+                        <td class="product-category"><span class="categories">{{ row.mobile_number }}</span></td>
+
+                        <td class="product-category"><span class="categories"><span class="status active" style="text-transform: capitalize;">{{ row.status }}</span></span></td>
+
+                        <td class="action" data-title="Action">
+                          <div class="">
+                            <ul class="list-inline justify-content-center">
+                              <li class="list-inline-item">
+                                <a data-toggle="tooltip" data-placement="top" title="view" class="view" href="{% url 'candidates:view_voters' id=row.unique_id %}">
+                                  <i class="fa fa-eye"></i>
+                                </a>
+                              </li>
+                              <li class="list-inline-item">
+                                <a data-toggle="tooltip" data-placement="top" title="view" class="view" href="{% url 'elections:messages_view' id=0 init_id=row.unique_id page_type='other' %}">
+                                  <i class="fa fa-envelope"></i>
+                                </a>
+                              </li>
+                              
+                              <li class="list-inline-item">
+                                <a class="delete" data-toggle="tooltip" data-placement="top" title="Delete" href="">
+                                  <i class="fa fa-trash"></i>
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  {% else %}
+                  <p><b>No Projects found.</b></p>
+                  {% endif %}
+
+			</div>
+		</div>
+	</div>
+</section>
+
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+    $('#example').DataTable();
+});  
+</script>
+{% endblock %}
+<!-- custom js end-->

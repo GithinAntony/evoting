@@ -1,0 +1,272 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+<link href="{% static 'plugins/datatables/datatables.min.css' %}" rel="stylesheet"/>
+<style>
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+.radio-button {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
+.radio-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #0066cc;
+  transition: transform 0.2s ease-in-out;
+}
+
+.radio-text {
+  margin-left: 30px;
+}
+
+input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+input[type="radio"]:checked + .radio-button::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+</style>
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+<section class="advt-post bg-gray py-5">
+	<div class="row">
+		<div class="col-md-12 text-center">
+			{% if messages %}
+			<ul class="messages text-center">
+			{% for message in messages %}
+			 <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+			 {% endfor %}
+			 </ul>
+			 {% endif %}
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+			  <a href="{% url 'elections:list_election_candidates' id=id_t %}" class="btn btn-danger btn-sm pull-right" style="padding: .25rem .5rem;"><i class="fa fa-arrow-left"></i> Back</a>
+			</div>
+		  </div>
+		  <br />
+		<div class="row">
+      		<div class="col-lg-5">
+				<div class="sidebar">
+					<div class="widget user text-center">
+						<img class="rounded-circle img-fluid mb-5 px-5" src="{{ userdata.candidates.profile_photo.url }}" alt="">
+						<h4><a href="">{{ userdata.candidates.first_name }} {{ userdata.candidates.last_name }}</a></h4>
+						<p class="member-time">Member Since {{ userdata.candidates.date_added }}</p>	
+            <span class="status active" style="text-transform: capitalize;"><strong>Status:</strong> 
+
+				{% if userdata.status == 'accepted' %}
+				<b style="color: green;">Accepted</b>
+				{% elif userdata.status == 'rejected' %}
+				<b style="color: red;">Rejected</b>
+				{% else %}
+				<b style="color: blue;">Applied</b>
+				{% endif %}  
+
+			</span>	
+			<hr />
+			<div class="col-lg-12">
+				<span class="add-id"><strong>CHANGE STATUS</strong></span><br /> 
+				<form action="" method="post" id="myform" name="myform"> 
+					{% csrf_token %}
+
+					<div class="col-lg-12">
+					<div class="radio-group">
+						<label class="radio-label">
+						  <input type="radio" name="candidate_status" value="accepted" {% if userdata.status == 'accepted' %} checked {% endif %} >
+						  <div class="radio-button"></div>
+						  <span class="radio-text">Accepted</span>
+						</label>
+						<label class="radio-label">
+						  <input type="radio" name="candidate_status" value="rejected" {% if userdata.status == 'rejected' %} checked {% endif %} >
+						  <div class="radio-button"></div>
+						  <span class="radio-text">Rejected</span>
+						</label>
+					  </div>
+					</div>
+
+					<div class="col-lg-12">
+						<h6 class="font-weight-bold pt-4 pb-1">Add Reason Here :</h6>
+						<textarea class="form-control bg-white" name="reason" id="reason" >{{ userdata.note_eo }}</textarea>
+					  </div>
+					<div class="col-lg-12" style="display: flex; justify-content: center; align-items: center;">
+						<button type="submit" class="btn btn-primary d-block mt-4">Submit</button>
+					</div>
+				</form>	
+			</div>
+						<ul class="list-inline mt-20">
+							<li class="list-inline-item"><a href="{% url 'elections:messages_view' id=0 init_id=userdata.candidates.unique_id page_type='other' %}" class="btn btn-contact d-inline-block btn-primary px-lg-5 my-1 px-md-3" target="_blank">Message</a></li>
+						</ul>
+					</div>
+
+				</div>
+			</div>
+			<div class="col-lg-7 pt-3 pb-3 pl-3" style="background-color: white;"> 
+
+				<h3 class="widget-header user">Party & Position</h3>
+				<hr />
+				<table class="table mt-4">
+					<thead>
+					  <tr>
+						<th># ID</th>
+						<th>Party Image</th>
+						<th>Party Name</th>
+						<th>Position</th>
+					  </tr>
+					</thead>
+					<tbody>
+						 <tr>
+						<td>{{ userdata.unique_id }}</td>
+						<td> 
+							{% if userdata.party.party_image %} 
+							<img src="{{ userdata.party.party_image.url }}" alt="{{ userdata.party.party_name }}" style="max-width: 50px;"> 
+							{% endif %} 
+						</td>
+						<td>{{ userdata.party.party_name }}</td>
+						<td>{{ userdata.position.postion_name }}</td>
+					  </tr> 
+					 </tbody>
+				  </table>
+				  <br />
+				  <h3 class="widget-header user">Election Details</h3>
+				  <hr />
+				  <div class="col-md-12">
+  
+					  <table class="table mt-4">
+						  <thead>
+							<tr>
+							  <th>Symbol Name</th>
+							  <th>Symbol Image</th>
+							</tr>
+						  </thead>
+						  <tbody>
+							  <tr>
+							  <td> 
+								  {% if userdata.party.party_image %} 
+								  <img src="{{ userdata.symbol.url }}" alt="{{ userdata.symbol.url }}" style="max-width: 50px;"> 
+								  {% endif %} 
+							  </td>
+							  <td>{{ userdata.symbol_name|capfirst }}</td>
+							</tr> 
+						   </tbody>
+						</table>
+					  
+						<span class="location" style="word-wrap: break-word;" ><strong>About Candidate:</strong> {{ userdata.about_us }}</span><br />
+						<span class="location" style="word-wrap: break-word;"><strong>Tag Line:</strong> {{ userdata.tag_line }}</span><br />
+						<span class="location" style="word-wrap: break-word;"><strong>Manifestos:</strong> 
+							<a href="{{ userdata.manifestos.url }}" download style="color: blue" >
+								Download - {{ userdata.manifestos.name|slice:":10" }}..........{{ userdata.manifestos.name|slice:"-4:" }}
+							</a> 
+						</span><br />
+  
+				  </div> 
+				  <br />
+				  <h3 class="widget-header user">Candidate Details</h3>
+				  <hr />
+				  <div class="col-md-12">
+                    <span class="add-id"><strong>Id:</strong> #{{ userdata.candidates.unique_id }}</span><br />         
+                    <span class="add-id"><strong>First Name:</strong> {{ userdata.candidates.first_name }}</span><br />
+                    <span class="add-id"><strong>Last Name:</strong> {{ userdata.candidates.last_name }}</span><br /> 
+                    <span class="add-id"><strong>Email Adddress:</strong> {{ userdata.candidates.email_address }}</span><br /> 
+					<span class="add-id"><strong>Phone Number:</strong> {{ userdata.candidates.mobile_number }}</span><br /> 
+                    <span class="add-id"><strong>Aadhaar Number:</strong> {{ userdata.candidates.aadhaar_number }}</span><br /> 
+					<span class="add-id"><strong>Address Line 1:</strong> {{ userdata.candidates.address_line_1 }}</span><br />     
+					<span class="add-id"><strong>Address Line 2:</strong> {{ userdata.candidates.address_line_2 }}</span><br />                                                           
+					<span class="location"><strong>District:</strong> {{ userdata.candidates.district }}</span><br />
+					<span class="location"><strong>State:</strong> {{ userdata.candidates.state }}</span><br />
+					<span class="location"><strong>Pin:</strong> {{ userdata.candidates.pin_code }}</span><br />
+                    <span class="status active" style="text-transform: capitalize;" ><strong>Status:</strong> {{ userdata.candidates.status }}</span><br />
+                    <span><strong>Date Added: </strong><time> {{ userdata.candidates.date_added }}</time> </span><br />
+                    <span><strong>Date Last Updated: </strong><time> {{ userdata.candidates.date_updated }}</time> </span><br />
+                </div>
+			</div>
+			</div>
+
+	</div>
+  </section>
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+	  $(document).ready(function() {
+		
+	$("#myform").validate({
+  	rules: {
+	candidate_status: {
+      required: true,
+    },
+    reason: {
+      required: true,
+      minlength: 2,
+      maxlength: 500
+    },
+  },
+  messages: {
+    candidate_status: {
+      required: "Please enter your status",
+    },
+	reason: {
+      required: "Please enter your reason",
+      minlength: "Your reason must be 2 charcters long",
+      maxlength: "Your reason must be 500 charcters long",
+    },
+  }
+});
+
+	  });
+</script>
+{% endblock %}
+<!-- custom js end-->

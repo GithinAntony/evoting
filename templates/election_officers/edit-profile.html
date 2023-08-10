@@ -1,0 +1,386 @@
+{% extends 'layout.html' %}
+{% block title %}
+eVoting
+{% endblock %}
+{% load static %}
+<!-- custom css -->
+{% block css %}
+{% endblock %}
+<!-- custom css end-->
+{% block content %}
+<section class="page-title">
+	<!-- Container Start -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 offset-md-2 text-center">
+				<!-- Title text -->
+			</div>
+		</div>
+	</div>
+	<!-- Container End -->
+</section>
+<section class="dashboard section">
+  <!-- Container Start -->
+  <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+          <div class="section-title">
+            <h2>Edit Profile</h2>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-center">
+            {% if messages %}
+            <ul class="messages text-center">
+            {% for message in messages %}
+             <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+             {% endfor %}
+             </ul>
+             {% endif %}
+      </div>
+      </div>
+    <!-- Row Start -->
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="sidebar">
+          <!-- User Widget -->
+          <div class="widget user-dashboard-profile">
+            <!-- User Image -->
+            <div class="profile-thumb">
+              <img src="{{ userdata.profile_photo.url }}" alt="" class="rounded-circle">
+            </div>
+            <!-- User Name -->
+            <h5 class="text-center">{{ userdata.first_name }} {{ userdata.last_name }}</h5>
+            <p>Joined {{ userdata.date_added }}</p>
+          </div>
+
+          
+          <div class="widget personal-info">
+            <h3 class="widget-header user">Edit Personal Information</h3>
+            <form action="{% url 'election_officers:edit_profile_pic' %}" id="myform1" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+                <!-- File chooser -->
+                <div class="form-group choose-file d-inline-flex">
+                    <i class="fa fa-user text-center px-3"></i>
+                    <input type="file" class="form-control-file mt-2 pt-1" name="profile_photo" id="profile_photo" >
+                 </div>
+                 <div class="col-md-12 error-msg"></div>
+                <!-- Submit button -->
+                <button class="btn btn-transparent" type="submit">Save My Changes</button>
+            </form>
+        </div>   
+          <!-- Dashboard Links -->
+
+          
+
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <!-- Edit Personal Info -->
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="widget personal-info">
+                    <h3 class="widget-header user">Edit Personal Information</h3>
+                    <form action="{% url 'election_officers:edit_profile' %}" id="myform2" method="post" role="form" >
+                      {% csrf_token %}
+                      <!-- First Name -->
+                      <div class="form-group">
+                          <label for="first-name">First Name</label>
+                          <input type="text" class="form-control" name="first_name" id="first_name" placeholder="" value="{{ userdata.first_name }}" >
+                      </div>
+                      <!-- Last Name -->
+                      <div class="form-group">
+                          <label for="last-name">Last Name</label>
+                          <input type="text" class="form-control" name="last_name" id="last_name" placeholder="" value="{{ userdata.last_name }}" >
+                      </div>
+                      <!-- Email Address -->
+                      <div class="form-group">
+                          <label for="email-address">Email Address</label>
+                          <input type="email" class="form-control" name="email_address" id="email_address" placeholder="" value="{{ userdata.email_address }}" >
+                      </div>
+                      <!-- Mobile Number -->
+                      <div class="form-group">
+                          <label for="mobile-number">Mobile Number</label>
+                          <input type="number" class="form-control" name="mobile_number" id="mobile_number" placeholder="" value="{{ userdata.mobile_number }}" >
+                      </div>
+                      <!-- Aadhaar Number -->
+                      <div class="form-group">
+                          <label for="aadhaar-number">Aadhaar Number</label>
+                          <input type="text" class="form-control" name="aadhaar_number" id="aadhaar_number" placeholder="" value="{{ userdata.aadhaar_number }}" >
+                      </div>
+                      <!-- Address Line 1 -->
+                      <div class="form-group">
+                          <label for="address-line-1">Address Line 1</label>
+                          <input type="text" class="form-control" name="address_line_1" id="address_line_1" placeholder="" value="{{ userdata.address_line_1 }}" >
+                      </div>
+                      <!-- Address Line 2 -->
+                      <div class="form-group">
+                          <label for="address-line-2">Address Line 2</label>
+                          <input type="text" class="form-control" name="address_line_2" id="address_line_2" placeholder="" value="{{ userdata.address_line_2 }}" >
+                      </div>
+                      <!-- District -->
+                      <div class="form-group">
+                          <label for="district">District</label>
+                          <input type="text" class="form-control" name="district" id="district" placeholder="" value="{{ userdata.district }}" >
+                      </div>
+                      <!-- State -->
+                      <div class="form-group">
+                          <label for="state">State</label>
+                          <input type="text" class="form-control" name="state" id="state" placeholder="" value="{{ userdata.state }}" >
+                      </div>
+                      <!-- Pin Code -->
+                      <div class="form-group">
+                          <label for="pin-code">Pin Code</label>
+                          <input type="text" class="form-control" name="pin_code" id="pin_code" placeholder="" value="{{ userdata.pin_code }}" >                  
+                        </div>
+                        <!-- Submit button -->
+                        <button class="btn btn-transparent">Save My Changes</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6">
+                <!-- Change Password -->
+            <div class="widget change-password">
+                <h3 class="widget-header user">Edit Password</h3>
+                <form action="{% url 'election_officers:edit_profile_password' %}" id="myform3" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                    <!-- Current Password -->
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" class="form-control" name="old_password" id="old_password" >
+                    </div>
+                    <!-- New Password -->
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" class="form-control" name="password" id="password" >
+                    </div>
+                    <!-- Confirm New Password -->
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" class="form-control" name="confirm_password" id="confirm_password" >
+                    </div>
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-transparent">Change Password</button>
+                </form>
+            </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+    </div>
+    <!-- Row End -->
+  </div>
+  <!-- Container End -->
+</section>
+
+{% endblock %}
+<!-- custom js -->
+{% block js %}
+<script src="{% static 'plugins/jquery-validate/jquery.validate.min.js' %}" defer></script>
+<script src="{% static 'plugins/jquery-validate/additional-methods.min.js' %}" defer></script>
+<script>
+$(document).ready(function(){
+
+$( "#myform1" ).validate({
+    ignore: [],
+    rules: {
+    profile_photo: {
+			required: true,
+			extension:'png,jpg,jpeg',
+		}, 
+  } , 
+  errorPlacement: function(error, element) {
+      // Insert error message after the input field
+      error.appendTo('.error-msg');
+    },
+  }); 
+
+     $.validator.addMethod("checkPhoneExist", function(value, element) {
+      var exists = false;
+      $.ajax({
+        url: "{% url 'election_officers:signup_check_mobile' %}",
+        method: "POST",
+        data: {
+          mobile_number: value,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        async: false,
+        success: function(data) {
+          exists = data.exists;
+        }
+      });
+      return !exists;
+    }, "This mobile number already exists in the database."); 
+
+    $.validator.addMethod("checkEmailExist", function(value, element) {
+      var exists = false;
+      $.ajax({
+        url: "{% url 'election_officers:signup_check_email' %}",
+        method: "POST",
+        data: {
+          email_a: value,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        async: false,
+        success: function(data) {
+          exists = data.exists;
+        }
+      });
+      return !exists;
+    }, "This email address already exists in the database.");     
+
+    $.validator.addMethod("checkAadhaarExist", function(value, element) {
+      var exists = false;
+      $.ajax({
+        url: "{% url 'election_officers:signup_check_aadhaar' %}",
+        method: "POST",
+        data: {
+          aadhaar_number: value,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+        },
+        async: false,
+        success: function(data) {
+          exists = data.exists;
+        }
+      });
+      return !exists;
+    }, "This aadhaar number already exists in the database.");  
+  
+    $("#myform2").validate({
+  rules: {
+    first_name: {
+      required: true,
+      digits: false,
+      minlength: 2,
+      maxlength: 255
+    },
+    last_name: {
+      required: true,
+      digits: false,
+      minlength: 2,
+      maxlength: 255
+    },
+    mobile_number: {
+      required: true,
+      digits: true,
+      minlength: 10,
+      maxlength: 10,
+      checkPhoneExist: true  
+    },
+    email_address: {
+      required: true,
+      email: true,
+      minlength: 8,
+      maxlength: 255,
+      checkEmailExist: true   
+    },
+    password: {
+      required: true,
+      minlength: 5,
+      maxlength: 35,
+    },
+    confirm_password: {
+      required: true,
+      minlength: 5,
+      maxlength: 35,
+      equalTo: "#password"
+    },
+    address_line_1: {
+      required: true,
+      minlength: 5,
+      maxlength: 255
+    },    
+    address_line_2: {
+      required: false,
+      maxlength: 255
+    },
+    district: {
+      required: true,
+      minlength: 2,
+      maxlength: 255
+    },
+    state: {
+      required: true,
+      minlength: 2,
+      maxlength: 255
+    },
+    pin_code: {
+      required: true,
+      digits: true,
+      minlength: 6,
+      maxlength: 6
+    },
+    aadhaar_number: {
+      required: true,
+      minlength: 12,
+      maxlength: 12,
+      digits: true,
+      checkAadhaarExist: true
+    }
+  },
+  messages: {
+    first_name: "Please enter your first name",
+    last_name: "Please enter your last name",
+    mobile_number: {
+      required: "Please enter your mobile number",
+      minlength: "Your mobile number must be at least 10 digits long"
+    },
+    email_address: {
+      required: "Please enter your email address",
+      email: "Please enter a valid email address"
+    },
+    password: {
+      required: "Please enter a password",
+      minlength: "Your password must be at least 8 characters long"
+    },
+    confirm_password: {
+      required: "Please confirm your password",
+      minlength: "Your password must be at least 8 characters long",
+      equalTo: "Your passwords do not match"
+    },
+    address_line_1: "Please enter your address",
+    district: "Please enter your district",
+    state: "Please enter your state",
+    pin_code: {
+      required: "Please enter your pin code",
+      minlength: "Your pin code must be at least 6 digits long"
+    },
+    profile_photo: "Please upload a profile photo",
+    aadhaar_number: {
+      required: "Please enter your Aadhaar number",
+      minlength: "Your Aadhaar number must be 12 digits long",
+      maxlength: "Your Aadhaar number must be 12 digits long",
+      digits: "Your Aadhaar number must contain only digits"
+    }
+  }
+});
+
+  $( "#myform3" ).validate({
+  ignore: [],
+  rules: {
+  old_password: {
+    required: true,
+    minlength: 5,
+    maxlength: 35,
+  },      
+  password: {
+    required: true,
+    minlength: 5,
+    maxlength: 35,
+  },
+  confirm_password: {
+    required: true,
+    minlength: 5,
+    maxlength: 35,
+    equalTo: "#password"
+  },
+  }
+  });  
+
+}); 
+</script>
+{% endblock %}
+<!-- custom js end-->
